@@ -1,0 +1,11 @@
+//theme.json
+{
+	"light": {
+		"navBgColor": "#ffffff",
+		"navTxtColor": "#000000"
+	},
+	"dark": {
+		"navBgColor": "#1f1f1f",
+		"navTxtColor": "#ffffff"
+	}
+}

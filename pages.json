@@ -1,0 +1,36 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/todo/list_todo",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/todo/create_todo",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/todo/todo_detail",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "@navTxtColor",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "@navBgColor",
+		"backgroundColor": "@navBgColor",
+		"rpxCalcMaxDeviceWidth": 960,
+		"usingComponents": true
+	},
+	"uniIdRouter": {}
+}
