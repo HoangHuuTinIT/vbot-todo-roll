@@ -19,7 +19,9 @@
 
 <script setup lang="ts">
 
+	import { computed } from 'vue'; 
 	import AppButton from '@/components/AppButton.vue';
+	import { useAuthStore } from '@/stores/auth';
 
 
 	interface Props {
@@ -67,7 +69,8 @@
 		bottom: 0;
 		background-color: rgba(0, 0, 0, 0.5);
 
-		z-index: 1000;
+
+		z-index: 10001;
 		display: flex;
 		align-items: center;
 		justify-content: center;

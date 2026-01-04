@@ -10575,6 +10575,7 @@ This will fail in production if not fixed.`);
     }
   });
   const common$1 = {
+    loading_more: ":Tải thêm...",
     loading: "Đang tải dữ liệu...",
     no_data: "Chưa có dữ liệu",
     all: "Tất cả",
