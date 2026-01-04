@@ -13,8 +13,8 @@ import { useCustomerFilter } from '@/composables/useCustomerFilter';
 import { useI18n } from 'vue-i18n';
 
 const useInfinitePagination = (defaultSize = 15) => {
-	const startPage = ref(1); 
-	const pageNo = ref(1);   
+	const startPage = ref(1);
+	const pageNo = ref(1);
 	const pageSize = ref(defaultSize);
 	const totalCount = ref(0);
 	const activePage = ref(1);
@@ -118,7 +118,7 @@ export const useListTodoController = () => {
 		loadMoreCustomers
 	} = useCustomerFilter();
 
-	const getTodoList = async (direction : 'init' | 'next' | 'prev' = 'init') => {
+	const getTodoList = async (direction: 'init' | 'next' | 'prev' = 'init') => {
 		if (direction === 'next' && (isLoadingMore.value || pageNo.value > totalPages.value)) return;
 		if (direction === 'prev' && (isLoadingPrev.value || startPage.value <= 1)) return;
 
@@ -126,15 +126,15 @@ export const useListTodoController = () => {
 		else if (direction === 'prev') isLoadingPrev.value = true;
 		else {
 			isLoading.value = true;
-			todos.value = []; 
+			todos.value = [];
 		}
 
 		try {
 			let targetPage = 1;
 
-			if (direction === 'next') targetPage = pageNo.value; 
+			if (direction === 'next') targetPage = pageNo.value;
 			else if (direction === 'prev') targetPage = startPage.value - 1;
-			else targetPage = pageNo.value; 
+			else targetPage = pageNo.value;
 
 			let selectedCreatorId = '';
 			if (creatorIndex.value > 0) {
@@ -204,13 +204,13 @@ export const useListTodoController = () => {
 		}
 	};
 
-	const onUpdatePageSize = (newSize : number) => {
+	const onUpdatePageSize = (newSize: number) => {
 		pageSize.value = newSize;
-		resetPagination(); 
+		resetPagination();
 		getTodoList('init');
 	};
 
-	const jumpToPage = (targetPage : number) => {
+	const jumpToPage = (targetPage: number) => {
 		if (targetPage === pageNo.value && startPage.value === targetPage) return;
 		pageNo.value = targetPage;
 		startPage.value = targetPage;
@@ -244,7 +244,7 @@ export const useListTodoController = () => {
 		isQuickCompleteOpen.value = false;
 	};
 
-	const handleQuickMarkDone = async (item : TodoItem) => {
+	const handleQuickMarkDone = async (item: TodoItem) => {
 		uni.showLoading({ title: t('common.processing') });
 		try {
 			const payload = { ...item, status: TODO_STATUS.DONE, preFixCode: "TODO", description: item.description || "", files: "", tagCodes: "" };
@@ -272,34 +272,36 @@ export const useListTodoController = () => {
 			fetchCustomers({});
 		}
 	};
-	const onCustomerSelect = (customer : any) => {
+	const onCustomerSelect = (customer: any) => {
 		filter.value.customerCode = customer.uid;
 		selectedCustomerName.value = customer.name;
 		showCustomerModal.value = false;
 	};
-	const onFilterCustomerInModal = (filterParams : any) => {
+	const onFilterCustomerInModal = (filterParams: any) => {
 		fetchCustomers(filterParams);
 	};
 
-	const onRequestDelete = (item : TodoItem) => { itemToDelete.value = item; isConfirmDeleteOpen.value = true; };
+	const onRequestDelete = (item: TodoItem) => { itemToDelete.value = item; isConfirmDeleteOpen.value = true; };
 	const cancelDelete = () => { isConfirmDeleteOpen.value = false; itemToDelete.value = null; };
 
 	const confirmDelete = async () => {
 		if (!itemToDelete.value) return;
+		const idToDelete = itemToDelete.value.id;
 		try {
-			await deleteTodo(itemToDelete.value.id);
+			await deleteTodo(idToDelete);
 			showSuccess(t('common.success_delete'));
 			isConfirmDeleteOpen.value = false;
-			itemToDelete.value = null;
-			todos.value = todos.value.filter(t => t.id !== itemToDelete.value?.id);
+			// Cập nhật danh sách local sau khi xóa thành công
+			todos.value = todos.value.filter(t => t.id !== idToDelete);
 			totalCount.value = Math.max(0, totalCount.value - 1);
+			itemToDelete.value = null;
 		} catch (error) {
 			console.error("Delete Error:", error);
 			showError(t('common.fail_delete'));
 		}
 	};
 
-	const showActionMenu = (item : TodoItem) => {
+	const showActionMenu = (item: TodoItem) => {
 		uni.showActionSheet({
 			itemList: [t('common.delete')],
 			itemColor: '#ff3b30',
@@ -316,10 +318,10 @@ export const useListTodoController = () => {
 	};
 	const closeFilter = () => { isFilterOpen.value = false; };
 
-	const onStatusChange = (e : any) => { statusIndex.value = e.detail.value; };
-	const onCreatorChange = (e : any) => { creatorIndex.value = e.detail.value; };
-	const onAssigneeChange = (e : any) => { assigneeIndex.value = e.detail.value; };
-	const onSourceChange = (e : any) => { sourceIndex.value = e.detail.value; };
+	const onStatusChange = (e: any) => { statusIndex.value = e.detail.value; };
+	const onCreatorChange = (e: any) => { creatorIndex.value = e.detail.value; };
+	const onAssigneeChange = (e: any) => { assigneeIndex.value = e.detail.value; };
+	const onSourceChange = (e: any) => { sourceIndex.value = e.detail.value; };
 
 	const resetFilter = () => {
 		filter.value = {
@@ -358,13 +360,13 @@ export const useListTodoController = () => {
 		}
 	});
 
-	const goToDetail = (item : TodoItem) => {
+	const goToDetail = (item: TodoItem) => {
 		uni.navigateTo({
 			url: `/pages/todo/todo_detail?id=${item.id}`
 		});
 	};
 
-	const updateActivePage = (index : number) => {
+	const updateActivePage = (index: number) => {
 		activePage.value = index;
 	};
 
