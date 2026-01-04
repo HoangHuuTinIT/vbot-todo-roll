@@ -52,20 +52,14 @@
 </script>
 
 <style lang="scss" scoped>
-	/* Mapping màu sắc:
-   - Background: #fff -> var(--bg-surface)
-   - Border: #e5e7eb -> var(--border-color)
-   - Icon Background: #eff6ff -> var(--bg-input)
-   - Text Domain: #111827 -> var(--text-primary)
-   - Text URL: #6b7280 -> var(--text-hint)
-*/
+
 
 	.link-card {
 		display: flex;
 		align-items: center;
-		/* Thay #fff */
+
 		background-color: var(--bg-surface);
-		/* Thay #e5e7eb */
+
 		border: 1px solid var(--border-color);
 		border-radius: 8px;
 		padding: 8px 10px;
@@ -75,7 +69,7 @@
 		transition: background-color 0.2s;
 
 		&:active {
-			/* Thay #f9fafb */
+
 			background-color: var(--bg-input);
 		}
 	}
@@ -83,7 +77,7 @@
 	.link-card-icon {
 		width: 36px;
 		height: 36px;
-		/* Thay #eff6ff (xanh nhạt) thành màu nền input để hợp dark mode */
+
 		background-color: var(--bg-input);
 		border-radius: 8px;
 		display: flex;
@@ -92,14 +86,14 @@
 		margin-right: 10px;
 		flex-shrink: 0;
 		overflow: hidden;
-		/* Thêm border nhẹ để tách biệt icon với nền nếu trùng màu */
+
 		border: 1px solid var(--border-color);
 	}
 
 	.card-icon-img {
 		width: 20px;
 		height: 20px;
-		/* Không dùng filter invert ở đây vì Favicon thường có màu sắc riêng */
+
 	}
 
 	.link-card-content {
@@ -112,14 +106,14 @@
 	.link-domain {
 		font-size: 13px;
 		font-weight: 600;
-		/* Thay #111827 */
+
 		color: var(--text-primary);
 		margin-bottom: 2px;
 	}
 
 	.link-url {
 		font-size: 11px;
-		/* Thay #6b7280 */
+
 		color: var(--text-hint);
 		white-space: nowrap;
 		overflow: hidden;
@@ -135,7 +129,7 @@
 	}
 
 	.remove-btn {
-		/* Thay #9ca3af */
+
 		color: var(--text-secondary);
 		font-size: 14px;
 		font-weight: bold;

@@ -12,13 +12,13 @@
 <script setup lang="ts">
 	import { ref, onMounted, onUnmounted, computed } from 'vue';
 	import { useI18n } from 'vue-i18n';
-	// 1. Import AuthStore
+
 	import { useAuthStore } from '@/stores/auth';
 
 	const { t } = useI18n();
 	const authStore = useAuthStore();
 
-	// 2. Lấy trạng thái Dark Mode
+
 	const isDark = computed(() => authStore.isDark);
 
 	const isVisible = ref(false);
@@ -27,7 +27,7 @@
 	const safeAreaBottom = ref(0);
 	let timer : any = null;
 
-	// Giữ nguyên logic Icons
+
 	const icons : Record<string, string> = {
 		success: 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23047857%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm-2%2015l-5-5%201.41-1.41L10%2014.17l7.59-7.59L19%208l-9%209z%22%2F%3E%3C%2Fsvg%3E',
 		error: 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23b91c1c%22%3E%3Cpath%20d%3D%22M12%202C6.47%202%202%206.47%202%2012s4.47%2010%2010%2010%2010-4.47%2010-10S17.53%202%2012%202zm5%2013.59L15.59%2017%2012%2013.41%208.41%2017%207%2015.59%2010.59%2012%207%208.41%208.41%207%2012%2010.59%2015.59%207%2017%208.41%2013.41%2012%2017%2015.59z%22%2F%3E%3C%2Fsvg%3E',
@@ -115,7 +115,7 @@
 		padding: 10px 20px;
 		border-radius: 50px;
 		max-width: 85%;
-		/* Shadow nhẹ cho light mode */
+
 		box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
 		background-color: #fff;
 		transition: background-color 0.3s, border-color 0.3s;
@@ -135,7 +135,7 @@
 		line-height: 1.4;
 	}
 
-	/* --- LIGHT MODE COLORS (Mặc định) --- */
+
 	.message-content.success {
 		background-color: #ecfdf5;
 		border: 1px solid #a7f3d0;
@@ -173,67 +173,63 @@
 	}
 
 
-	/* --- DARK MODE OVERRIDES --- */
-	/* Logic: Nền chuyển sang màu đậm, Border tối màu, Text chuyển sang màu sáng (pastel)
-       để dễ đọc trên nền tối.
-    */
 
-	/* Global container dark logic */
+
+
 	:deep(.theme-dark) .message-content {
 		box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
-		/* Shadow đậm hơn */
+
 	}
 
-	/* Success Dark */
+
 	:deep(.theme-dark) .message-content.success {
 		background-color: #064e3b;
-		/* Xanh đậm */
+
 		border: 1px solid #065f46;
 	}
 
 	:deep(.theme-dark) .message-content.success .msg-text {
 		color: #d1fae5;
-		/* Xanh nhạt */
+
 	}
 
-	/* Error Dark */
+
 	:deep(.theme-dark) .message-content.error {
 		background-color: #7f1d1d;
-		/* Đỏ đậm */
+
 		border: 1px solid #991b1b;
 	}
 
 	:deep(.theme-dark) .message-content.error .msg-text {
 		color: #fecaca;
-		/* Đỏ nhạt */
+
 	}
 
-	/* Info Dark */
+
 	:deep(.theme-dark) .message-content.info {
 		background-color: #1e3a8a;
-		/* Xanh dương đậm */
+
 		border: 1px solid #172554;
 	}
 
 	:deep(.theme-dark) .message-content.info .msg-text {
 		color: #bfdbfe;
-		/* Xanh dương nhạt */
+
 	}
 
-	/* Warning Dark */
+
 	:deep(.theme-dark) .message-content.warning {
 		background-color: #78350f;
-		/* Cam đậm */
+
 		border: 1px solid #451a03;
 	}
 
 	:deep(.theme-dark) .message-content.warning .msg-text {
 		color: #fde68a;
-		/* Vàng nhạt */
+
 	}
 
-	/* Icon Brightness fix in Dark Mode */
-	/* Vì icon là SVG cứng màu đậm, ta tăng độ sáng lên để nó nổi trên nền tối */
+
 	:deep(.theme-dark) .msg-icon {
 		filter: brightness(1.5) saturate(0.8);
 	}

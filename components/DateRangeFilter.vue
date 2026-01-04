@@ -46,13 +46,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/* Mapping biến màu:
-   - Border Top: #eee -> var(--border-color)
-   - Bg Input: #f8f9fa -> var(--bg-input)
-   - Border Input: #e0e0e0 -> var(--border-input)
-   - Text Value: #333 -> var(--text-primary)
-   - Text Placeholder: #999 -> var(--text-hint)
-*/
+
 
 	.f-section-title {
 		margin-top: 20px;
@@ -60,7 +54,7 @@
 		font-weight: bold;
 		font-size: 14px;
 		color: #009688;
-		/* Thay #eee */
+
 		border-top: 1px dashed var(--border-color);
 		padding-top: 15px;
 	}
@@ -79,9 +73,9 @@
 	}
 
 	.f-picker {
-		/* Thay #f8f9fa */
+
 		background-color: var(--bg-input);
-		/* Thay #e0e0e0 */
+
 		border: 1px solid var(--border-input);
 		border-radius: 8px;
 		padding: 10px;
@@ -90,12 +84,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* Thay #333 */
+
 		color: var(--text-primary);
 	}
 
 	.f-picker.placeholder {
-		/* Thay #999 */
+
 		color: var(--text-hint);
 	}
 </style>

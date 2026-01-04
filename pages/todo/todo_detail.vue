@@ -363,16 +363,12 @@
 	};
 </script>
 <style lang="scss" scoped>
-	/* Import theme variables */
 	@import '@/common/theme.scss';
-
-	/* --- CONTAINER & LAYOUT --- */
 	.container {
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
 		background-color: var(--bg-page);
-		/* Thay #f5f5f7 */
 	}
 
 	.detail-body {
@@ -381,18 +377,15 @@
 		box-sizing: border-box;
 	}
 
-	/* --- HEADER --- */
 	.custom-header {
 		height: 44px;
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 10px;
 		padding-top: var(--status-bar-height);
 		border-bottom: 1px solid var(--border-color);
-		/* Thay #eee */
 		position: sticky;
 		top: 0;
 		z-index: 100;
@@ -411,14 +404,12 @@
 		height: 20px;
 		transform: rotate(90deg);
 		filter: var(--icon-filter);
-		/* Đảo màu icon */
 	}
 
 	.header-title {
 		font-size: 17px;
 		font-weight: bold;
 		color: var(--text-primary);
-		/* Thay #333 */
 	}
 
 	.header-right {
@@ -430,10 +421,8 @@
 
 	.detail-header-content {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		padding: 15px 15px 10px 15px;
 		border-bottom: 1px solid var(--border-color);
-		/* Thay #eee */
 	}
 
 	.header-top {
@@ -445,10 +434,8 @@
 	.header-code {
 		font-size: 13px;
 		color: var(--text-secondary);
-		/* Thay #888 */
 		font-weight: bold;
 		background: var(--bg-tag);
-		/* Thay #f0f0f0 */
 		padding: 2px 6px;
 		border-radius: 4px;
 	}
@@ -457,7 +444,6 @@
 		font-size: 18px;
 		font-weight: bold;
 		color: var(--text-primary);
-		/* Thay #333 */
 		width: 100%;
 		min-height: 30px;
 		line-height: 1.4;
@@ -467,14 +453,12 @@
 
 	.header-title-input[disabled] {
 		color: var(--text-secondary);
-		/* Thay #666 */
 	}
 
 	.input-placeholder {
 		color: var(--text-hint);
 	}
 
-	/* --- SECTIONS --- */
 	.section-block {
 		margin-bottom: 20px;
 	}
@@ -483,7 +467,6 @@
 		font-size: 14px;
 		font-weight: bold;
 		color: var(--text-secondary);
-		/* Thay #666 */
 		margin-bottom: 10px;
 		margin-left: 5px;
 		text-transform: uppercase;
@@ -495,7 +478,6 @@
 
 	.info-group {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		border-radius: 8px;
 		overflow: hidden;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -506,18 +488,15 @@
 		opacity: 0.7;
 		pointer-events: none;
 		background-color: var(--bg-input);
-		/* Thay #f9f9f9 */
 	}
 
 	.flat-item {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		padding: 15px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: 1px solid var(--border-color);
-		/* Thay #f5f5f5 */
 	}
 
 	.flat-item:last-child {
@@ -536,13 +515,11 @@
 		opacity: 0.5;
 		margin-right: 10px;
 		filter: var(--icon-filter);
-		/* Đảo màu icon */
 	}
 
 	.item-label {
 		font-size: 15px;
 		color: var(--text-primary);
-		/* Thay #333 */
 	}
 
 	.item-picker-box {
@@ -564,13 +541,11 @@
 	.customer-block {
 		min-height: 80px;
 		background: var(--bg-surface);
-		/* Thay #fff */
 	}
 
 	.item-right-text {
 		font-size: 15px;
 		color: var(--text-primary);
-		/* Thay #333 */
 		font-weight: 500;
 		text-align: right;
 		flex: 1;
@@ -590,15 +565,12 @@
 		padding: 20px;
 		text-align: center;
 		color: var(--text-hint);
-		/* Thay #999 */
 		font-size: 14px;
 		font-style: italic;
 	}
 
-	/* --- HISTORY TIMELINE --- */
 	.history-container {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		border-radius: 8px;
 		padding: 20px 15px;
 		margin-bottom: 20px;
@@ -636,7 +608,6 @@
 		bottom: 0;
 		width: 2px;
 		background-color: var(--border-color);
-		/* Thay #e5e5ea */
 		z-index: 1;
 	}
 
@@ -655,23 +626,19 @@
 		font-size: 15px;
 		font-weight: bold;
 		color: var(--text-primary);
-		/* Thay #333 */
 	}
 
 	.t-time {
 		font-size: 12px;
 		color: var(--text-hint);
-		/* Thay #999 */
 	}
 
 	.t-action {
 		font-size: 14px;
 		color: var(--text-secondary);
-		/* Thay #555 */
 		line-height: 1.4;
 	}
 
-	/* --- COMMENTS SECTION --- */
 	.section-header-row {
 		display: flex;
 		justify-content: space-between;
@@ -692,14 +659,12 @@
 		align-items: center;
 	}
 
-	/* Dark mode override for badge */
 	:global(.theme-dark) .filter-badge {
 		background-color: rgba(0, 122, 255, 0.2);
 	}
 
 	.comments-section {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		padding: 15px;
 		margin-bottom: 20px;
 		border-radius: 8px;
@@ -713,7 +678,6 @@
 	.editor-container {
 		margin-bottom: 10px;
 		border: 1px solid var(--border-color);
-		/* Thay #eee */
 		border-radius: 8px;
 		overflow: hidden;
 	}
@@ -738,11 +702,9 @@
 	.divider-line {
 		height: 1px;
 		background-color: var(--border-color);
-		/* Thay #eee */
 		margin: 15px 0 20px 0;
 	}
 
-	/* --- ALERTS (Editing / Reply) --- */
 	.editing-alert {
 		margin-bottom: 10px;
 		padding: 8px 12px;
@@ -780,7 +742,6 @@
 
 	.reply-label {
 		color: var(--text-secondary);
-		/* Thay #666 */
 	}
 
 	.reply-name {
@@ -791,7 +752,6 @@
 	.reply-quote {
 		font-style: italic;
 		color: var(--text-secondary);
-		/* Thay #555 */
 		font-size: 13px;
 		background-color: rgba(255, 255, 255, 0.6);
 		padding: 4px 8px;
@@ -809,7 +769,6 @@
 	.quote-icon {
 		font-size: 16px;
 		color: var(--text-hint);
-		/* Thay #999 */
 		font-weight: bold;
 	}
 
@@ -817,7 +776,6 @@
 		display: inline;
 	}
 
-	/* --- TOGGLES & ACTIONS --- */
 	.toggle-header {
 		display: flex;
 		align-items: center;
@@ -832,7 +790,6 @@
 		transition: transform 0.3s ease;
 		transform: rotate(-90deg);
 		filter: var(--icon-filter);
-		/* Đảo màu icon */
 	}
 
 	.toggle-icon.open {
@@ -848,9 +805,7 @@
 
 	.btn-cancel-edit {
 		background-color: var(--bg-input);
-		/* Thay #f5f5f5 */
 		color: var(--text-secondary);
-		/* Thay #666 */
 		font-size: 13px;
 		font-weight: bold;
 		padding: 0 15px;
@@ -858,13 +813,10 @@
 		line-height: 32px;
 		border-radius: 16px;
 		border: 1px solid var(--border-input);
-		/* Thay #ddd */
 	}
 
-	/* --- EMOJI PICKER --- */
 	.emoji-picker-container {
 		background-color: var(--bg-surface);
-		/* Thay #fff */
 		border-radius: 12px;
 		padding: 15px;
 		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -892,7 +844,6 @@
 		transform: scale(1.2);
 	}
 
-	/* --- LOADING OVERLAY --- */
 	.loading-bar {
 		position: fixed;
 		top: 0;
@@ -946,7 +897,6 @@
 		}
 	}
 
-	/* Legacy/Unused classes kept for safety */
 	.comment-thread {
 		margin-bottom: 20px;
 		border-bottom: 1px dashed #f0f0f0;

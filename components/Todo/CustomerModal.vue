@@ -11,7 +11,7 @@
 					</view>
 					<text class="close-btn" @click="close">✕</text>
 				</view>
-			</view>
+			</view> 
 
 			<view class="filter-section" v-if="isFilterExpanded">
 				<view class="f-item">
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-	// Logic giữ nguyên như cũ
+
 	import { reactive, ref, computed } from 'vue';
 	import UserAvatar from '@/components/UserAvatar.vue';
 	import DateRangeFilter from '@/components/DateRangeFilter.vue';
@@ -174,7 +174,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/* Chú ý: Dùng CSS Variables từ theme.scss */
+
 
 	.modal-overlay {
 		position: fixed;
@@ -182,7 +182,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		/* Giữ màu overlay tối mờ, không đổi theo theme */
+
 		background-color: rgba(0, 0, 0, 0.5);
 		z-index: 999;
 		display: flex;
@@ -193,7 +193,7 @@
 	.modal-content {
 		width: 90%;
 		height: 80vh;
-		/* Thay #fff */
+
 		background-color: var(--bg-surface);
 		border-radius: 12px;
 		display: flex;
@@ -203,7 +203,7 @@
 
 	.modal-header {
 		padding: 15px;
-		/* Thay border và bg */
+
 		border-bottom: 1px solid var(--border-color);
 		background-color: var(--bg-surface);
 		display: flex;
@@ -214,7 +214,7 @@
 	.modal-title {
 		font-weight: bold;
 		font-size: 16px;
-		/* Thay #333 */
+
 		color: var(--text-primary);
 	}
 
@@ -231,13 +231,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		/* Thay #f5f5f5 */
+
 		background-color: var(--bg-input);
 		transition: all 0.2s;
 	}
 
 	.filter-toggle-btn.active {
-		/* Khi active, vẫn giữ màu xanh brand, nhưng dùng rgba để nó không quá chói trên nền đen */
+
 		background-color: rgba(0, 150, 136, 0.15);
 		border: 1px solid #009688;
 	}
@@ -246,20 +246,20 @@
 		width: 20px;
 		height: 20px;
 		opacity: 0.7;
-		/* QUAN TRỌNG: Đảo màu icon đen -> trắng khi ở Dark Mode */
+
 		filter: var(--icon-filter);
 	}
 
 	.close-btn {
 		font-size: 20px;
 		padding: 5px;
-		/* Thay #999 */
+
 		color: var(--text-secondary);
 	}
 
 	.filter-section {
 		padding: 15px;
-		/* Thay bg và border */
+
 		background-color: var(--bg-surface);
 		border-bottom: 1px solid var(--border-color);
 		flex-shrink: 0;
@@ -271,7 +271,7 @@
 
 	.f-input,
 	.f-picker-box {
-		/* Thay bg, border */
+
 		background-color: var(--bg-input);
 		border: 1px solid var(--border-input);
 		border-radius: 8px;
@@ -282,11 +282,11 @@
 		align-items: center;
 		width: 100%;
 		box-sizing: border-box;
-		/* Màu chữ khi nhập */
+
 		color: var(--text-primary);
 	}
 
-	/* Override màu placeholder style (cần dùng deep selector hoặc global class) */
+
 	:deep(.ph-style) {
 		color: var(--text-hint) !important;
 	}
@@ -296,18 +296,18 @@
 	}
 
 	.text-ph {
-		/* Thay #999 */
+
 		color: var(--text-hint);
 	}
 
 	.text-val {
-		/* Thay #333 */
+
 		color: var(--text-primary);
 	}
 
 	.arrow {
 		font-size: 10px;
-		/* Thay #999 */
+
 		color: var(--text-hint);
 	}
 
@@ -328,13 +328,13 @@
 	}
 
 	.btn-reset {
-		/* Thay bg và text */
+
 		background-color: var(--bg-input);
 		color: var(--text-secondary);
 	}
 
 	.btn-submit {
-		/* Giữ màu Brand, vì nút submit thường cần nổi bật */
+
 		background-color: #009688;
 		color: #fff;
 	}
@@ -342,7 +342,7 @@
 	.customer-list {
 		flex: 1;
 		height: 1px;
-		/* Đảm bảo nền list đúng màu */
+
 		background-color: var(--bg-surface);
 	}
 
@@ -350,7 +350,7 @@
 	.empty-state {
 		text-align: center;
 		padding: 30px;
-		/* Thay #888 */
+
 		color: var(--text-hint);
 		font-size: 14px;
 	}
@@ -359,13 +359,13 @@
 		display: flex;
 		align-items: center;
 		padding: 12px 15px;
-		/* Thay border và bg */
+
 		border-bottom: 1px solid var(--border-color);
 		background-color: var(--bg-surface);
 	}
 
 	.customer-item:active {
-		/* Thay màu khi nhấn giữ */
+
 		background-color: var(--bg-input);
 	}
 
@@ -384,7 +384,7 @@
 	.name-text {
 		font-size: 15px;
 		font-weight: 600;
-		/* Thay #333 */
+
 		color: var(--text-primary);
 		margin-bottom: 3px;
 		white-space: nowrap;
@@ -394,7 +394,7 @@
 
 	.phone-text {
 		font-size: 13px;
-		/* Thay #666 */
+
 		color: var(--text-secondary);
 	}
 
@@ -405,7 +405,7 @@
 
 	.date-text {
 		font-size: 12px;
-		/* Thay #999 */
+
 		color: var(--text-hint);
 	}
 
@@ -418,7 +418,7 @@
 
 	.loading-more-text {
 		font-size: 12px;
-		/* Thay #999 */
+
 		color: var(--text-hint);
 	}
 </style>

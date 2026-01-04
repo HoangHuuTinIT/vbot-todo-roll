@@ -29,7 +29,7 @@
 		}
 	});
 
-	// Trả về tên class thay vì utility class của Tailwind
+
 	const statusClass = computed(() => {
 		switch (props.status) {
 			case TODO_STATUS.NEW:
@@ -47,10 +47,9 @@
 </script>
 
 <style lang="scss" scoped>
-	/* Import theme để có thể dùng các mixin hoặc biến global nếu cần */
-	@import '@/common/theme.scss';
 
-	/* 1. Base Styles (Cấu trúc chung) */
+
+
 	.badge-base {
 		padding: 4px 8px;
 		border-radius: 9999px;
@@ -63,8 +62,7 @@
 		transition: background-color 0.3s, color 0.3s;
 	}
 
-	/* 2. Định nghĩa màu sắc mặc định (Light Mode) */
-	/* Logic: Nền nhạt - Chữ đậm */
+
 	.status-new {
 		background-color: #e4e4e7;
 		color: #52525b;
@@ -90,32 +88,29 @@
 		color: #a1a1aa;
 	}
 
-	/* 3. Dark Mode Overrides */
-	/* Logic: Nền đậm - Chữ sáng (Pastel) để dễ đọc trên nền tối */
 
-	/* Sử dụng :global(.theme-dark) để bắt class từ thẻ cha (App/Page) */
 	:global(.theme-dark) .status-new {
 		background-color: #3f3f46;
 		color: #e4e4e7;
-		/* Xám đậm / Xám trắng */
+
 	}
 
 	:global(.theme-dark) .status-progress {
 		background-color: #7c2d12;
 		color: #ffedd5;
-		/* Cam nâu đậm / Cam nhạt */
+
 	}
 
 	:global(.theme-dark) .status-done {
 		background-color: #064e3b;
 		color: #d1fae5;
-		/* Xanh lá đậm / Xanh bạc hà */
+
 	}
 
 	:global(.theme-dark) .status-overdue {
 		background-color: #7f1d1d;
 		color: #fecaca;
-		/* Đỏ rượu / Hồng nhạt */
+
 	}
 
 	:global(.theme-dark) .status-default {

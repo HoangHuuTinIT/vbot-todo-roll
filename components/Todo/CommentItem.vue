@@ -102,7 +102,7 @@
 	import { computed } from 'vue';
 	import UserAvatar from '@/components/UserAvatar.vue';
 	import { useAuthStore } from '@/stores/auth';
-	// Lưu ý: Import chính nó để đệ quy (Recursive component)
+
 	import CommentItem from './CommentItem.vue'; 
 	import { openExternalLink } from '@/utils/linkHelper';
 	import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html.vue';
@@ -119,7 +119,7 @@
 		return props.data.isMe === true;
 	});
 
-	// SỬA: Dùng var(--text-primary) thay vì mã màu cứng để nội dung HTML tự đổi màu
+
 	const htmlStyles = {
 		p: 'font-size: 14px; line-height: 1.5; color: var(--text-primary); margin: 0; margin-bottom: 2px;',
 		div: 'font-size: 14px; line-height: 1.5; color: var(--text-primary);',
@@ -180,7 +180,7 @@
 </script>
 
 <style scoped>
-	/* === UTILS LAYOUT (Giữ nguyên) === */
+
 	.flex-col { display: flex; flex-direction: column; }
 	.mb-2 { margin-bottom: 8px; }
 	.flex { display: flex; }
@@ -208,38 +208,38 @@
 	.mr-3 { margin-right: 12px; }
 	.pl-12 { padding-left: 48px; }
 
-	/* === THEME COLORS MAPPING === */
 
-	/* Bubble chat nền xám/tối */
+
+
 	.comment-bubble {
-		/* Thay #f9fafb (bg-gray-50) */
+
 		background-color: var(--bg-input); 
 	}
 
-	/* Tên người gửi */
+
 	.sender-name {
-		/* Thay #111827 (text-gray-900) */
+
 		color: var(--text-primary);
 	}
 	
-	/* Label trong log update */
+
 	.log-label {
-		/* Thay #374151 */
+
 		color: var(--text-primary);
 	}
 
-	/* Text phụ (action, time) */
+
 	.action-text {
-		/* Thay #6b7280 (gray-500) */
+
 		color: var(--text-secondary);
 	}
 
 	.time-text {
-		/* Thay #9ca3af (gray-400) */
+
 		color: var(--text-hint);
 	}
 
-	/* --- Footer Actions --- */
+
 	.c-footer-actions {
 		display: flex;
 		justify-content: space-between;
@@ -253,11 +253,11 @@
 	}
 
 	.emoji-tag {
-		/* Thay #fff */
+
 		background-color: var(--bg-surface);
-		/* Thay #eee */
+
 		border: 1px solid var(--border-color);
-		/* Thêm màu chữ cho emoji */
+
 		color: var(--text-primary);
 		border-radius: 10px;
 		padding: 2px 6px;
@@ -289,7 +289,7 @@
 	.icon-action {
 		width: 18px;
 		height: 18px;
-		/* QUAN TRỌNG: Đảo màu icon đen -> trắng khi dark mode */
+
 		filter: var(--icon-filter);
 	}
 
@@ -297,7 +297,7 @@
 		max-width: 200px;
 		max-height: 300px;
 		border-radius: 8px;
-		/* Thay border cứng */
+
 		border: 1px solid var(--border-color);
 		display: block;
 	}
@@ -326,7 +326,7 @@
 
 	.arrow-text {
 		font-weight: bold;
-		/* Thay #6b7280 */
+
 		color: var(--text-secondary);
 		font-size: 16px;
 	}

@@ -52,8 +52,7 @@
 	const pickerValue = ref<number[]>([0]);
 	const tempValue = ref<any>(0);
 
-	// Style cho khung chọn ở giữa (Indicator)
-	// Dùng biến --border-color để đường kẻ tự đổi màu theo theme, z-index thấp để không che chữ
+
 	const indicatorStyle = `
 		height: 50px; 
 		border-top: 1px solid var(--border-color); 
@@ -61,9 +60,6 @@
 		z-index: 0;
 	`;
 
-	// Style cho lớp mặt nạ mờ (Mask)
-	// QUAN TRỌNG: Sử dụng linear-gradient từ var(--bg-surface) (màu nền) đến trong suốt.
-	// Điều này giúp loại bỏ hiệu ứng "sương mù trắng" xấu xí trên nền tối.
 	const maskStyle = `
 		background-image: linear-gradient(to bottom, var(--bg-surface), rgba(0,0,0,0)), linear-gradient(to top, var(--bg-surface), rgba(0,0,0,0));
 		z-index: 0;
@@ -122,10 +118,8 @@
 		right: 0;
 		bottom: 0;
 		background: rgba(0, 0, 0, 0.6);
-		/* Tăng độ tối của mask nền một chút cho tập trung hơn */
 		z-index: 9998;
 		backdrop-filter: blur(2px);
-		/* Hiệu ứng mờ nền phía sau (nếu trình duyệt hỗ trợ) */
 	}
 
 	.picker-panel {
@@ -137,10 +131,8 @@
 		z-index: 9999;
 		transform: translateY(100%);
 		transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-		/* Hiệu ứng trượt mượt hơn */
 		padding-bottom: env(safe-area-inset-bottom);
 		border-top-left-radius: 16px;
-		/* Bo tròn nhiều hơn chút cho hiện đại */
 		border-top-right-radius: 16px;
 	}
 
@@ -153,11 +145,9 @@
 		justify-content: space-between;
 		align-items: center;
 		height: 48px;
-		/* Tăng chiều cao toolbar chút cho thoáng */
 		border-bottom: 1px solid var(--border-color);
 		padding: 0 16px;
 		background-color: var(--bg-surface);
-		/* Đồng bộ màu nền với panel để liền mạch */
 		border-top-left-radius: 16px;
 		border-top-right-radius: 16px;
 	}
@@ -189,13 +179,11 @@
 		line-height: 50px;
 		text-align: center;
 		font-size: 17px;
-		/* Tăng size chữ lên xíu cho dễ đọc */
 		font-weight: 400;
 		color: var(--text-primary);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		z-index: 10;
-		/* Đảm bảo text nổi lên trên các lớp mask */
 	}
 </style>

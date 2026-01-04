@@ -11,10 +11,4 @@ export const changeLanguage = (lang: 'vi' | 'en') => {
 
     uni.setStorageSync('CURRENT_LANG', lang);
     console.log("🔀 Đã đổi ngôn ngữ sang:", lang);
-    // 4. (Tùy chọn) Reload lại trang hiện tại nếu UI không cập nhật hết
-    // const pages = getCurrentPages();
-    // if (pages.length > 0) {
-    //     const route = pages[pages.length - 1].route;
-    //     uni.reLaunch({ url: '/' + route });
-    // }
 };

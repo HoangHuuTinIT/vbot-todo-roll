@@ -35,8 +35,8 @@ import AppPicker from '@/components/AppPicker.vue';
 const props = defineProps<{
 	total: number;
 	pageSize: number;
-	currentPage: number; // Trang hiện tại đang xem (tính toán theo vị trí cuộn)
-	maxLoadedPage: number; // Trang lớn nhất đã tải dữ liệu về
+	currentPage: number;
+	maxLoadedPage: number;
 	pageSizeOptions: number[];
 }>();
 
@@ -61,8 +61,7 @@ const onPageSizeChange = (e: any) => {
 };
 
 const onPageClick = (page: number) => {
-	// Chỉ cho phép nhảy đến các trang đã load hoặc trang kế tiếp
-	// Hoặc logic nhảy trang (sẽ reset list) tuỳ bạn chọn
+
 	emit('jumpToPage', page);
 };
 </script>
@@ -83,7 +82,7 @@ const onPageClick = (page: number) => {
 	padding: 10px 0;
 	z-index: 90;
 	border: 1px solid var(--border-color);
-	max-height: 70vh; /* Giới hạn chiều cao */
+	max-height: 70vh;
 }
 
 .page-size-trigger {
@@ -121,8 +120,8 @@ const onPageClick = (page: number) => {
 }
 
 .pages-scroll {
-	flex: 1; /* Tự co giãn trong max-height */
-	height: 0; /* Quan trọng để scroll view hoạt động trong flex */
+	flex: 1;
+	height: 0;
 	width: 100%;
 }
 
@@ -152,7 +151,7 @@ const onPageClick = (page: number) => {
 }
 
 .page-dot.loaded {
-	/* Trang đã tải nhưng chưa focus */
+
 	border-color: var(--border-color);
 }
 

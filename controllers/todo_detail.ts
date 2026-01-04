@@ -177,19 +177,11 @@ export const useTodoDetailController = () => {
 	};
 	const isHtmlContentEmpty = (html : string) => {
 		if (!html) return true;
-
-		// 1. Nếu có ảnh hoặc video (iframe) thì coi như KHÔNG rỗng
 		if (html.includes('<img') || html.includes('<iframe')) {
 			return false;
 		}
-
-		// 2. Thay thế các ký tự khoảng trắng đặc biệt (&nbsp;) thành khoảng trắng thường
 		let textOnly = html.replace(/&nbsp;/gi, ' ');
-
-		// 3. Loại bỏ toàn bộ thẻ HTML (<p>, <br>, <div>...)
 		textOnly = textOnly.replace(/<[^>]+>/g, '');
-
-		// 4. Cắt khoảng trắng đầu đuôi và kiểm tra độ dài
 		return textOnly.trim().length === 0;
 	};
 	const processCommentInput = async (htmlContent : string) : Promise<{ cleanMessage : string, fileUrl : string }> => {

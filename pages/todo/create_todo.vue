@@ -123,10 +123,8 @@
 <style lang="scss" scoped>
 	@import '@/common/theme.scss';
 
-	/* --- CONTAINER --- */
 	.container {
 		min-height: 100vh;
-		/* Thay #f5f5f7 */
 		background-color: var(--bg-page);
 		display: flex;
 		flex-direction: column;
@@ -134,17 +132,14 @@
 		box-sizing: border-box;
 	}
 
-	/* --- HEADER --- */
 	.custom-header {
 		height: 44px;
-		/* Thay #fff */
 		background-color: var(--bg-surface);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 10px;
 		padding-top: var(--status-bar-height);
-		/* Thay #eee */
 		border-bottom: 1px solid var(--border-color);
 		position: sticky;
 		top: 0;
@@ -171,12 +166,10 @@
 
 	.picker-group-wrapper {
 		background-color: var(--bg-surface);
-		/* Lấy màu nền theo theme */
 		border-radius: 8px;
 		margin-bottom: 12px;
 		overflow: hidden;
 		border: 1px solid var(--border-color);
-		/* Đồng bộ viền với các item khác */
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 	}
 
@@ -184,14 +177,12 @@
 		width: 20px;
 		height: 20px;
 		transform: rotate(90deg);
-		/* Đảo màu mũi tên quay lại */
 		filter: var(--icon-filter);
 	}
 
 	.header-title {
 		font-size: 17px;
 		font-weight: bold;
-		/* Thay #333 */
 		color: var(--text-primary);
 	}
 
@@ -199,9 +190,7 @@
 		width: 40px;
 	}
 
-	/* --- FORM ITEMS --- */
 	.flat-item {
-		/* Thay #fff */
 		background-color: var(--bg-surface);
 		margin-bottom: 12px;
 		padding: 15px;
@@ -209,7 +198,6 @@
 		align-items: center;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 		border-radius: 8px;
-		/* Thêm border mờ để rõ hơn trên nền tối */
 		border: 1px solid var(--border-color);
 	}
 
@@ -223,7 +211,6 @@
 		width: 22px;
 		height: 22px;
 		opacity: 0.6;
-		/* Đảo màu icon item */
 		filter: var(--icon-filter);
 	}
 
@@ -231,14 +218,12 @@
 		flex: 1;
 		text-align: left;
 		font-size: 15px;
-		/* Thay #333 */
 		color: var(--text-primary);
 		min-height: 24px;
 		line-height: 1.4;
 		padding: 5px 0;
 	}
 
-	/* Class riêng cho placeholder */
 	.input-placeholder {
 		color: var(--text-hint);
 	}
@@ -250,7 +235,6 @@
 
 	.char-count {
 		font-size: 12px;
-		/* Thay #999 */
 		color: var(--text-hint);
 		margin-left: 10px;
 		flex-shrink: 0;
@@ -262,44 +246,36 @@
 
 	.picker-display {
 		font-size: 15px;
-		/* Thay #333 */
 		color: var(--text-primary);
 		width: 100%;
 	}
 
 	.placeholder-color {
-		/* Thay #808080 */
 		color: var(--text-hint);
 	}
 
 	.footer-action {
-	    /* 1. Giảm khoảng cách với phần Ngày giờ bên trên (từ 30px -> 10px) */
 	    margin-top: 10px; 
 	
 	    display: flex;
 	    justify-content: space-between;
 	    gap: 15px;
-	
-	    /* 2. Giảm khoảng trống bên dưới (từ 30px -> 10px + vùng an toàn của iPhone) */
 	    padding-bottom: calc(10px + env(safe-area-inset-bottom));
 	}
 	.customer-item {
-	    margin-top: 12px; /* Tạo khoảng cách với Editor bên trên */
+	    margin-top: 12px;
 	}
 	.input-trigger {
 		flex: 1;
 		font-size: 15px;
-		/* Thay #333 */
 		color: var(--text-primary);
 	}
 
 	.input-trigger.placeholder {
-		/* Thay #808080 */
 		color: var(--text-hint);
 	}
 
 	.arrow-icon {
-		/* Thay #ccc */
 		color: var(--text-hint);
 		font-size: 18px;
 		margin-left: 5px;

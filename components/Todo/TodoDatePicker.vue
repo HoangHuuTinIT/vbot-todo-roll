@@ -75,19 +75,18 @@
 </script>
 
 <style lang="scss" scoped>
-	/* 1. IMPORT THEME */
+
 	@import '@/common/theme.scss';
 
 	.flat-item {
-		/* SỬA: Thay background trắng cứng bằng biến surface */
+
 		background-color: var(--bg-surface);
 		margin-bottom: 12px;
 		padding: 15px;
 		display: flex;
 		align-items: center;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-		/* Thêm border nhẹ nếu muốn rõ hơn trong dark mode */
-		// border: 1px solid var(--border-color); 
+ 
 	}
 
 	.item-left {
@@ -100,7 +99,7 @@
 		width: 22px;
 		height: 22px;
 		opacity: 0.6;
-		/* QUAN TRỌNG: Đảo màu icon đồng hồ khi sang dark mode */
+
 		filter: var(--icon-filter);
 	}
 
@@ -134,7 +133,7 @@
 	.item-picker {
 		text-align: left;
 		font-size: 15px;
-		/* SỬA: Thay màu #333 bằng text-primary (trắng/đen tuỳ mode) */
+
 		color: var(--text-primary);
 		width: 100%;
 		display: flex;
@@ -143,13 +142,13 @@
 	}
 
 	.placeholder-color {
-		/* SỬA: Thay màu #808080 bằng text-hint */
+
 		color: var(--text-hint);
 	}
 
 	.picker-label {
 		font-weight: bold;
-		/* SỬA: Thay màu #666 bằng text-secondary */
+
 		color: var(--text-secondary);
 		margin-right: 10px;
 		font-size: 14px;
@@ -157,13 +156,13 @@
 	}
 
 	.picker-value {
-		/* Đảm bảo giá trị ngày giờ hiển thị rõ */
+
 		color: var(--text-primary);
 	}
 
 	.inner-divider {
 		height: 1px;
-		/* SỬA: Thay màu #f0f0f0 bằng border-color */
+
 		background-color: var(--border-color);
 		margin: 10px 0;
 		width: 100%;

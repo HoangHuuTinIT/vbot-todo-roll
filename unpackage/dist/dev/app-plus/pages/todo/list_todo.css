@@ -555,15 +555,11 @@
 .font-bold[data-v-7abf19e0] {
 		font-weight: bold;
 }
-
-	/* Class màu chữ trắng cố định (dùng khi avatar có màu nền nổi bật) */
 .text-white[data-v-7abf19e0] {
 		color: white;
 }
-
-	/* Class màu chữ thay đổi theo theme (dùng khi avatar không có màu nền) */
 .text-adaptive[data-v-7abf19e0] {
-		/* Thay #666666 bằng biến text phụ */
+
 		color: var(--text-secondary);
 }
 
@@ -938,11 +934,9 @@
 		right: 0;
 		bottom: 0;
 		background: rgba(0, 0, 0, 0.6);
-		/* Tăng độ tối của mask nền một chút cho tập trung hơn */
 		z-index: 9998;
 		-webkit-backdrop-filter: blur(2px);
 		        backdrop-filter: blur(2px);
-		/* Hiệu ứng mờ nền phía sau (nếu trình duyệt hỗ trợ) */
 }
 .picker-panel[data-v-e6406d7a] {
 		position: fixed;
@@ -953,10 +947,8 @@
 		z-index: 9999;
 		transform: translateY(100%);
 		transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-		/* Hiệu ứng trượt mượt hơn */
 		padding-bottom: env(safe-area-inset-bottom);
 		border-top-left-radius: 16px;
-		/* Bo tròn nhiều hơn chút cho hiện đại */
 		border-top-right-radius: 16px;
 }
 .picker-panel.show[data-v-e6406d7a] {
@@ -967,11 +959,9 @@
 		justify-content: space-between;
 		align-items: center;
 		height: 48px;
-		/* Tăng chiều cao toolbar chút cho thoáng */
 		border-bottom: 1px solid var(--border-color);
 		padding: 0 16px;
 		background-color: var(--bg-surface);
-		/* Đồng bộ màu nền với panel để liền mạch */
 		border-top-left-radius: 16px;
 		border-top-right-radius: 16px;
 }
@@ -998,14 +988,12 @@
 		line-height: 50px;
 		text-align: center;
 		font-size: 17px;
-		/* Tăng size chữ lên xíu cho dễ đọc */
 		font-weight: 400;
 		color: var(--text-primary);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		z-index: 10;
-		/* Đảm bảo text nổi lên trên các lớp mask */
 }
 
 /**
@@ -1615,20 +1603,12 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-/* Mapping biến màu:
-   - Border Top: #eee -> var(--border-color)
-   - Bg Input: #f8f9fa -> var(--bg-input)
-   - Border Input: #e0e0e0 -> var(--border-input)
-   - Text Value: #333 -> var(--text-primary)
-   - Text Placeholder: #999 -> var(--text-hint)
-*/
 .f-section-title[data-v-645c14d9] {
   margin-top: 20px;
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 14px;
   color: #009688;
-  /* Thay #eee */
   border-top: 1px dashed var(--border-color);
   padding-top: 15px;
 }
@@ -1643,9 +1623,7 @@
   width: 48%;
 }
 .f-picker[data-v-645c14d9] {
-  /* Thay #f8f9fa */
   background-color: var(--bg-input);
-  /* Thay #e0e0e0 */
   border: 1px solid var(--border-input);
   border-radius: 8px;
   padding: 10px;
@@ -1654,11 +1632,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Thay #333 */
   color: var(--text-primary);
 }
 .f-picker.placeholder[data-v-645c14d9] {
-  /* Thay #999 */
   color: var(--text-hint);
 }
 /**
@@ -1686,14 +1662,12 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-/* Chú ý: Dùng CSS Variables từ theme.scss */
 .modal-overlay[data-v-0c007ba7] {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* Giữ màu overlay tối mờ, không đổi theo theme */
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   display: flex;
@@ -1703,7 +1677,6 @@
 .modal-content[data-v-0c007ba7] {
   width: 90%;
   height: 80vh;
-  /* Thay #fff */
   background-color: var(--bg-surface);
   border-radius: 12px;
   display: flex;
@@ -1712,7 +1685,6 @@
 }
 .modal-header[data-v-0c007ba7] {
   padding: 15px;
-  /* Thay border và bg */
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-surface);
   display: flex;
@@ -1722,7 +1694,6 @@
 .modal-title[data-v-0c007ba7] {
   font-weight: bold;
   font-size: 16px;
-  /* Thay #333 */
   color: var(--text-primary);
 }
 .header-actions[data-v-0c007ba7] {
@@ -1737,12 +1708,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Thay #f5f5f5 */
   background-color: var(--bg-input);
   transition: all 0.2s;
 }
 .filter-toggle-btn.active[data-v-0c007ba7] {
-  /* Khi active, vẫn giữ màu xanh brand, nhưng dùng rgba để nó không quá chói trên nền đen */
   background-color: rgba(0, 150, 136, 0.15);
   border: 1px solid #009688;
 }
@@ -1750,18 +1719,15 @@
   width: 20px;
   height: 20px;
   opacity: 0.7;
-  /* QUAN TRỌNG: Đảo màu icon đen -> trắng khi ở Dark Mode */
   filter: var(--icon-filter);
 }
 .close-btn[data-v-0c007ba7] {
   font-size: 20px;
   padding: 5px;
-  /* Thay #999 */
   color: var(--text-secondary);
 }
 .filter-section[data-v-0c007ba7] {
   padding: 15px;
-  /* Thay bg và border */
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -1771,7 +1737,6 @@
 }
 .f-input[data-v-0c007ba7],
 .f-picker-box[data-v-0c007ba7] {
-  /* Thay bg, border */
   background-color: var(--bg-input);
   border: 1px solid var(--border-input);
   border-radius: 8px;
@@ -1782,11 +1747,8 @@
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  /* Màu chữ khi nhập */
   color: var(--text-primary);
 }
-
-/* Override màu placeholder style (cần dùng deep selector hoặc global class) */
 [data-v-0c007ba7] .ph-style {
   color: var(--text-hint) !important;
 }
@@ -1794,16 +1756,13 @@
   justify-content: space-between;
 }
 .text-ph[data-v-0c007ba7] {
-  /* Thay #999 */
   color: var(--text-hint);
 }
 .text-val[data-v-0c007ba7] {
-  /* Thay #333 */
   color: var(--text-primary);
 }
 .arrow[data-v-0c007ba7] {
   font-size: 10px;
-  /* Thay #999 */
   color: var(--text-hint);
 }
 .f-actions[data-v-0c007ba7] {
@@ -1821,26 +1780,22 @@
   border: none;
 }
 .btn-reset[data-v-0c007ba7] {
-  /* Thay bg và text */
   background-color: var(--bg-input);
   color: var(--text-secondary);
 }
 .btn-submit[data-v-0c007ba7] {
-  /* Giữ màu Brand, vì nút submit thường cần nổi bật */
   background-color: #009688;
   color: #fff;
 }
 .customer-list[data-v-0c007ba7] {
   flex: 1;
   height: 1px;
-  /* Đảm bảo nền list đúng màu */
   background-color: var(--bg-surface);
 }
 .loading-state[data-v-0c007ba7],
 .empty-state[data-v-0c007ba7] {
   text-align: center;
   padding: 30px;
-  /* Thay #888 */
   color: var(--text-hint);
   font-size: 14px;
 }
@@ -1848,12 +1803,10 @@
   display: flex;
   align-items: center;
   padding: 12px 15px;
-  /* Thay border và bg */
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-surface);
 }
 .customer-item[data-v-0c007ba7]:active {
-  /* Thay màu khi nhấn giữ */
   background-color: var(--bg-input);
 }
 .mr-3[data-v-0c007ba7] {
@@ -1869,7 +1822,6 @@
 .name-text[data-v-0c007ba7] {
   font-size: 15px;
   font-weight: 600;
-  /* Thay #333 */
   color: var(--text-primary);
   margin-bottom: 3px;
   white-space: nowrap;
@@ -1878,7 +1830,6 @@
 }
 .phone-text[data-v-0c007ba7] {
   font-size: 13px;
-  /* Thay #666 */
   color: var(--text-secondary);
 }
 .date-column[data-v-0c007ba7] {
@@ -1887,7 +1838,6 @@
 }
 .date-text[data-v-0c007ba7] {
   font-size: 12px;
-  /* Thay #999 */
   color: var(--text-hint);
 }
 .loading-more-container[data-v-0c007ba7] {
@@ -1898,7 +1848,6 @@
 }
 .loading-more-text[data-v-0c007ba7] {
   font-size: 12px;
-  /* Thay #999 */
   color: var(--text-hint);
 }
 /**
@@ -1926,60 +1875,6 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-/* Import theme để có thể dùng các mixin hoặc biến global nếu cần */
-/*common/theme.scss */
-/* 1. Mặc định là LIGHT MODE */
-[data-v-7f144565]:root, body[data-v-7f144565] {
-  /* Background */
-  --bg-page: #f0f2f5;
-  /* Màu nền tổng thể */
-  --bg-surface: #ffffff;
-  /* Màu nền các thẻ card, popup, header */
-  --bg-input: #f8f9fa;
-  /* Màu nền input */
-  --bg-tag: #f0f2f5;
-  /* Màu nền các tag code */
-  /* Text */
-  --text-primary: #333333;
-  /* Chữ chính */
-  --text-secondary: #666666;
-  /* Chữ phụ, label */
-  --text-hint: #999999;
-  /* Chữ mờ, placeholder */
-  --text-danger: #ff3b30;
-  /* Màu đỏ cảnh báo */
-  --text-highlight: #525f7f;
-  /* Màu text nổi bật (cho tag) */
-  /* Border & Divider */
-  --border-color: #eeeeee;
-  /* Đường viền */
-  --border-input: #e0e0e0;
-  /* Viền input */
-  /* Icons */
-  --icon-filter: none;
-  /* Icon mặc định không đảo màu */
-}
-/* 2. Khi có class .theme-dark thì ghi đè lại các biến trên */
-.theme-dark[data-v-7f144565] {
-  /* Background Tối */
-  --bg-page: #121212;
-  --bg-surface: #1e1e1e;
-  --bg-input: #2c2c2c;
-  --bg-tag: #2c2c2c;
-  /* Text Tối (đảo sang sáng) */
-  --text-primary: #e0e0e0;
-  --text-secondary: #aaaaaa;
-  --text-hint: #666666;
-  --text-danger: #ff5e55;
-  --text-highlight: #b0c4de;
-  /* Border Tối */
-  --border-color: #333333;
-  --border-input: #444444;
-  /* Icons */
-  --icon-filter: invert(1);
-  /* Đảo màu icon đen sang trắng */
-}
-/* 1. Base Styles (Cấu trúc chung) */
 .badge-base[data-v-7f144565] {
   padding: 4px 8px;
   border-radius: 9999px;
@@ -1991,8 +1886,6 @@
   line-height: 1.4;
   transition: background-color 0.3s, color 0.3s;
 }
-/* 2. Định nghĩa màu sắc mặc định (Light Mode) */
-/* Logic: Nền nhạt - Chữ đậm */
 .status-new[data-v-7f144565] {
   background-color: #e4e4e7;
   color: #52525b;
@@ -2013,28 +1906,21 @@
   background-color: #f4f4f5;
   color: #a1a1aa;
 }
-/* 3. Dark Mode Overrides */
-/* Logic: Nền đậm - Chữ sáng (Pastel) để dễ đọc trên nền tối */
-/* Sử dụng :global(.theme-dark) để bắt class từ thẻ cha (App/Page) */
 .theme-dark {
   background-color: #3f3f46;
   color: #e4e4e7;
-  /* Xám đậm / Xám trắng */
 }
 .theme-dark {
   background-color: #7c2d12;
   color: #ffedd5;
-  /* Cam nâu đậm / Cam nhạt */
 }
 .theme-dark {
   background-color: #064e3b;
   color: #d1fae5;
-  /* Xanh lá đậm / Xanh bạc hà */
 }
 .theme-dark {
   background-color: #7f1d1d;
   color: #fecaca;
-  /* Đỏ rượu / Hồng nhạt */
 }
 .theme-dark {
   background-color: #27272a;
@@ -2085,34 +1971,22 @@
   opacity: 0.8;
   transform: scale(0.98);
 }
-
-/* PRIMARY: Giữ màu Brand, chữ trắng */
 .btn-primary[data-v-2f131dae] {
   background-color: #009688;
   color: #ffffff;
   border-color: #009688;
 }
-
-/* SECONDARY: Thay màu cứng bằng biến nền Input (Xám nhạt / Xám đậm) */
 .btn-secondary[data-v-2f131dae] {
-  /* Thay #f5f5f5 */
   background-color: var(--bg-input);
-  /* Thay #666666 */
   color: var(--text-secondary);
-  /* Thay #f5f5f5 */
   border-color: var(--bg-input);
 }
-
-/* DANGER: Dùng biến --text-danger (đỏ) từ theme */
 .btn-danger[data-v-2f131dae] {
   background-color: var(--text-danger);
   color: #ffffff;
   border-color: var(--text-danger);
 }
-
-/* OUTLINE: Nền thay đổi theo theme (Trắng / Đen xám) */
 .btn-outline[data-v-2f131dae] {
-  /* Thay #ffffff */
   background-color: var(--bg-surface);
   color: #009688;
   border-color: #009688;
@@ -2123,24 +1997,18 @@
   font-size: 12px;
   padding: 0 12px;
 }
-
-/* DISABLED: Dùng biến border/input cho nền, text-hint cho chữ */
 .is-disabled[data-v-2f131dae] {
   opacity: 0.6;
-  /* Thay #e0e0e0 */
   background-color: var(--bg-input) !important;
   border-color: var(--bg-input) !important;
-  /* Thay #999 */
   color: var(--text-hint) !important;
   pointer-events: none;
 }
 .loading-spinner[data-v-2f131dae] {
   width: 14px;
   height: 14px;
-  /* Sửa lại spinner để nó lấy màu theo màu chữ của nút (currentColor) */
   border: 2px solid currentColor;
   border-top-color: transparent;
-  /* Phần trong suốt để tạo hiệu ứng quay */
   opacity: 0.6;
   border-radius: 50%;
   margin-right: 8px;
@@ -2251,7 +2119,6 @@ to {
   padding: 10px 20px;
   border-radius: 50px;
   max-width: 85%;
-  /* Shadow nhẹ cho light mode */
   box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   transition: background-color 0.3s, border-color 0.3s;
@@ -2268,7 +2135,6 @@ to {
   color: #333;
   line-height: 1.4;
 }
-/* --- LIGHT MODE COLORS (Mặc định) --- */
 .message-content.success[data-v-2f57c33b] {
   background-color: #ecfdf5;
   border: 1px solid #a7f3d0;
@@ -2297,57 +2163,37 @@ to {
 .message-content.warning .msg-text[data-v-2f57c33b] {
   color: #b45309;
 }
-/* --- DARK MODE OVERRIDES --- */
-/* Logic: Nền chuyển sang màu đậm, Border tối màu, Text chuyển sang màu sáng (pastel)
-      để dễ đọc trên nền tối.
-   */
-/* Global container dark logic */
 [data-v-2f57c33b] .theme-dark .message-content {
   box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
-  /* Shadow đậm hơn */
 }
-/* Success Dark */
 [data-v-2f57c33b] .theme-dark .message-content.success {
   background-color: #064e3b;
-  /* Xanh đậm */
   border: 1px solid #065f46;
 }
 [data-v-2f57c33b] .theme-dark .message-content.success .msg-text {
   color: #d1fae5;
-  /* Xanh nhạt */
 }
-/* Error Dark */
 [data-v-2f57c33b] .theme-dark .message-content.error {
   background-color: #7f1d1d;
-  /* Đỏ đậm */
   border: 1px solid #991b1b;
 }
 [data-v-2f57c33b] .theme-dark .message-content.error .msg-text {
   color: #fecaca;
-  /* Đỏ nhạt */
 }
-/* Info Dark */
 [data-v-2f57c33b] .theme-dark .message-content.info {
   background-color: #1e3a8a;
-  /* Xanh dương đậm */
   border: 1px solid #172554;
 }
 [data-v-2f57c33b] .theme-dark .message-content.info .msg-text {
   color: #bfdbfe;
-  /* Xanh dương nhạt */
 }
-/* Warning Dark */
 [data-v-2f57c33b] .theme-dark .message-content.warning {
   background-color: #78350f;
-  /* Cam đậm */
   border: 1px solid #451a03;
 }
 [data-v-2f57c33b] .theme-dark .message-content.warning .msg-text {
   color: #fde68a;
-  /* Vàng nhạt */
 }
-/* Icon Brightness fix in Dark Mode */
-/* Vì icon là SVG cứng màu đậm, ta tăng độ sáng lên để nó nổi trên nền tối */
 [data-v-2f57c33b] .theme-dark .msg-icon {
   filter: brightness(1.5) saturate(0.8);
 }
@@ -2376,7 +2222,6 @@ to {
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-/* 3. Import Theme */
 /*common/theme.scss */
 /* 1. Mặc định là LIGHT MODE */
 [data-v-5d0d13a1]:root, body[data-v-5d0d13a1] {
@@ -2436,7 +2281,6 @@ to {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  /* Giữ nguyên overlay tối */
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -2444,13 +2288,11 @@ to {
 }
 .modal-container[data-v-5d0d13a1] {
   width: 80%;
-  /* Thay #fff bằng biến nền */
   background-color: var(--bg-surface);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: popIn-5d0d13a1 0.2s ease-out;
-  /* Thêm transition để đổi màu mượt mà */
   transition: background-color 0.3s;
 }
 @keyframes popIn-5d0d13a1 {
@@ -2465,27 +2307,23 @@ to {
 }
 .modal-header[data-v-5d0d13a1] {
   padding: 15px;
-  /* Thay #eee bằng biến border */
   border-bottom: 1px solid var(--border-color);
   text-align: center;
 }
 .modal-title[data-v-5d0d13a1] {
   font-size: 18px;
   font-weight: bold;
-  /* Thay #333 bằng biến text chính */
   color: var(--text-primary);
 }
 .modal-body[data-v-5d0d13a1] {
   padding: 20px 15px;
   text-align: center;
   font-size: 15px;
-  /* Thay #555 bằng biến text phụ */
   color: var(--text-secondary);
   line-height: 1.5;
 }
 .modal-footer[data-v-5d0d13a1] {
   display: flex;
-  /* Thay #eee bằng biến border */
   border-top: 1px solid var(--border-color);
   padding: 15px;
   gap: 10px;
@@ -2518,7 +2356,6 @@ to {
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-/* 5. Import Theme & Chuyển sang SCSS */
 /*common/theme.scss */
 /* 1. Mặc định là LIGHT MODE */
 [data-v-e3127153]:root, body[data-v-e3127153] {
@@ -2590,30 +2427,22 @@ to {
   pointer-events: auto;
 }
 .notification-card[data-v-e3127153] {
-  /* 6. Dùng biến nền surface */
   background: var(--bg-surface);
   width: 100%;
   max-width: 600px;
   border-radius: 12px;
-  /* Giữ shadow nhưng có thể giảm opacity nếu cần, hoặc để nguyên */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 12px 16px;
   display: flex;
   align-items: flex-start;
   gap: 12px;
   border-left: 5px solid #007aff;
-  /* Thêm border mỏng cho dark mode để card nổi bật hơn trên nền tối */
-  border-top: 1px solid transparent;
-  border-right: 1px solid transparent;
-  border-bottom: 1px solid transparent;
 }
-/* Tùy chỉnh border cho dark mode nếu cần thiết */
 [data-v-e3127153] .theme-dark .notification-card {
   border-top-color: var(--border-color);
   border-right-color: var(--border-color);
   border-bottom-color: var(--border-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* Shadow đậm hơn chút ở dark mode */
 }
 .notification-card.success[data-v-e3127153] {
   border-left-color: #4cd964;
@@ -2637,18 +2466,15 @@ to {
 }
 .close-btn[data-v-e3127153] {
   font-size: 14px;
-  /* 7. Dùng biến màu hint */
   color: var(--text-hint);
   padding: 4px;
 }
-/* Các style deep cho nội dung rich-text */
 [data-v-e3127153] .highlight {
   color: #007aff;
   font-weight: bold;
 }
 [data-v-e3127153] b {
   font-weight: 600;
-  /* 8. Đổi màu thẻ bold từ #000 sang biến primary */
   color: var(--text-primary);
 }
 /**
@@ -2679,17 +2505,13 @@ to {
 .list-view-content-measurer[data-v-1b4e60ea] {
   display: flex;
   flex-direction: column;
-  /* Thêm khoảng đệm đỉnh đầu để card đầu tiên không bị dính header */
   padding-top: 15px;
-  /* Đảm bảo phần dưới cùng cũng có khoảng hở khi cuộn hết cỡ */
   padding-bottom: 15px;
 }
 .py-2[data-v-1b4e60ea] {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-
-/* CSS Cũ giữ nguyên */
 .load-prev-wrapper[data-v-1b4e60ea] {
   padding: 10px;
   display: flex;

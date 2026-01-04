@@ -34,8 +34,7 @@
 		},
 		avatarColor: {
 			type: String,
-			// Nếu bạn muốn mặc định là một màu cụ thể thì để mã màu.
-			// Nếu muốn mặc định ăn theo theme thì để chuỗi rỗng ''.
+
 			default: '#3b82f6'
 		},
 		size: {
@@ -49,14 +48,12 @@
 		return props.name.trim().charAt(0).toUpperCase();
 	});
 
-	// Xử lý màu nền: Nếu có màu chỉ định thì dùng, không thì dùng biến theme
+
 	const finalBgColor = computed(() => {
 		return props.avatarColor ? props.avatarColor : 'var(--bg-input)';
 	});
 
-	// Xử lý màu chữ: 
-	// - Nếu có màu nền chỉ định (thường là màu đậm) -> Chữ trắng.
-	// - Nếu là nền fallback (thường là xám nhạt/đậm theo theme) -> Chữ theo theme.
+
 	const textColorClass = computed(() => {
 		return props.avatarColor ? 'text-white' : 'text-adaptive';
 	});
@@ -95,14 +92,14 @@
 		font-weight: bold;
 	}
 
-	/* Class màu chữ trắng cố định (dùng khi avatar có màu nền nổi bật) */
+
 	.text-white {
 		color: white;
 	}
 
-	/* Class màu chữ thay đổi theo theme (dùng khi avatar không có màu nền) */
+
 	.text-adaptive {
-		/* Thay #666666 bằng biến text phụ */
+
 		color: var(--text-secondary);
 	}
 </style>

@@ -16,7 +16,6 @@ export const useAuthStore = defineStore('auth', {
 		projectCode: uni.getStorageSync('vbot_project_code') || '',
 		refreshPromise: null as Promise<void> | null,
 		themeMode: uni.getStorageSync('app_theme_mode') || 'auto',
-		// MỚI: Lưu trạng thái thực tế đang hiển thị (true = dark, false = light)
 		isActualDark: false
 	}),
 
@@ -68,9 +67,7 @@ export const useAuthStore = defineStore('auth', {
 			} else if (mode === 'light') {
 				this.isActualDark = false;
 			} else {
-				// AUTO: Lấy theo hệ thống máy
 				const sysInfo = uni.getSystemInfoSync();
-				// osTheme có thể trả về 'dark' hoặc 'light' (tuỳ phiên bản UniApp/Android)
 				this.isActualDark = (sysInfo.osTheme === 'dark' || sysInfo.hostTheme === 'dark');
 			}
 			console.log(`🎨 Theme applied: Mode=${mode}, ActualDark=${this.isActualDark}`);

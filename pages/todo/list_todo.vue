@@ -280,7 +280,7 @@
 	</view>
 </template>
 <script setup lang="ts">
-	import { ref, computed, watch, onMounted, nextTick, getCurrentInstance } from 'vue'; // Added nextTick, getCurrentInstance
+	import { ref, computed, watch, onMounted, nextTick, getCurrentInstance } from 'vue';
 	import CustomerModal from '@/components/Todo/CustomerModal.vue';
 	import { useListTodoController } from '@/controllers/list_todo';
 	import StatusBadge from '@/components/StatusBadge.vue';
@@ -288,17 +288,15 @@
 	import AppButton from '@/components/AppButton.vue';
 	import GlobalMessage from '@/components/GlobalMessage.vue';
 	import ConfirmModal from '@/components/ConfirmModal.vue';
-	// import Pagination from '@/components/Pagination.vue';
 	import GlobalNotification from '@/components/GlobalNotification.vue';
 	import AppPicker from '@/components/AppPicker.vue';
 	import { useI18n } from 'vue-i18n';
 	import { useAuthStore } from '@/stores/auth';
 
-	const instance = getCurrentInstance(); // Instance để đo chiều cao DOM
+	const instance = getCurrentInstance();
 	const authStore = useAuthStore();
 	const isDark = computed(() => authStore.isDark);
 
-	// State quản lý Scroll 
 	const scrollTop = ref(0);
 	const lastScrollTop = ref(0);
 	const enableScrollAnimation = ref(true);
@@ -374,30 +372,23 @@
 		handleQuickMarkDone,
 		startPage,
 		isLoadingPrev,
-		isLoadingMore, // Ensure this is destructured
+		isLoadingMore, 
 		onLoadPrev
 	} = useListTodoController();
 
-	// --- LOGIC LOAD PREV PAGE KHI CUỘN LÊN ĐỈNH ---
 	const onScrollToUpper = async () => {
-		// 1. Kiểm tra điều kiện
 		if (isLoadingPrev.value || isLoading.value || startPage.value <= 1) return;
 
 		console.log("Trigger Load Prev Page:", startPage.value - 1);
 
-		// 2. Đo chiều cao list hiện tại TRƯỚC khi load
 		const query = uni.createSelectorQuery().in(instance);
 		query.select('.list-view-content-measurer').boundingClientRect(rect => {
 			if (!rect) return;
 			const oldHeight = rect.height;
 
-			// 3. Gọi hàm load data (đã await)
 			onLoadPrev().then(() => {
-				// 4. Data đã về, DOM update xong
 				nextTick(() => {
-					// Delay thêm chút để render chắc chắn xong
 					setTimeout(() => {
-						// 5. Đo chiều cao MỚI
 						const queryNew = uni.createSelectorQuery().in(instance);
 						queryNew.select('.list-view-content-measurer').boundingClientRect(newRect => {
 							if (!newRect) return;
@@ -406,16 +397,8 @@
 							const heightDifference = newHeight - oldHeight;
 
 							console.log(`Old: ${oldHeight}, New: ${newHeight}, Diff: ${heightDifference}`);
-
-							// 6. Fix vị trí cuộn:
-							// Tắt animation để nhảy tức thì
 							enableScrollAnimation.value = false;
-
-							// Nhảy xuống 1 đoạn đúng bằng chiều cao phần mới thêm vào
 							scrollTop.value = heightDifference;
-
-							// Bật lại animation sau khi nhảy xong
-							// Bật lại animation sau khi nhảy xong
 							requestAnimationFrame(() => {
 								requestAnimationFrame(() => {
 									enableScrollAnimation.value = true;
@@ -460,23 +443,19 @@
 	const onUpdatePageSizeUI = (e : any) => {
 		const index = e.detail.value;
 		if (pageSizeOptions[index]) {
-			// Scroll lên đầu khi đổi size
 			scrollTop.value = lastScrollTop.value;
 			setTimeout(() => { scrollTop.value = 0; }, 10);
-			onUpdatePageSize(pageSizeOptions[index]); // Corrected function name
+			onUpdatePageSize(pageSizeOptions[index]);
 		}
 	};
 	const handleJumpToPage = (page : number) => {
 		jumpToPage(page);
-		isPaginationExpanded.value = false; // Đóng drawer sau khi chọn
-		// Reset scroll lên đầu
+		isPaginationExpanded.value = false;
 		scrollTop.value = lastScrollTop.value;
 		setTimeout(() => { scrollTop.value = 0; }, 10);
 	};
 	const onScroll = (e : any) => {
 		lastScrollTop.value = e.detail.scrollTop;
-
-		// Logic tính toán trang hiện tại (activePage) để highlight UI bên phải
 		if (todos.value.length === 0) return;
 		
 		const scrollHeight = e.detail.scrollHeight || 0;
@@ -488,8 +467,6 @@
 			const relativeIndex = Math.min(currentIndex, todos.value.length - 1);
 			const p = Math.ceil((todos.value.length) / pageSize.value);
 			const currentChunk = Math.floor(relativeIndex / pageSize.value);
-
-			// Logic tính trang dựa trên startPage và vị trí scroll hiện tại
 			const viewingPage = startPage.value + currentChunk;
 
 			if (viewingPage > 0 && viewingPage <= totalPages.value) {
@@ -504,9 +481,7 @@
 	.list-view-content-measurer {
 	    display: flex;
 	    flex-direction: column;
-	    /* Thêm khoảng đệm đỉnh đầu để card đầu tiên không bị dính header */
 	    padding-top: 15px; 
-	    /* Đảm bảo phần dưới cùng cũng có khoảng hở khi cuộn hết cỡ */
 	    padding-bottom: 15px; 
 	}
 
@@ -515,7 +490,6 @@
 		padding-bottom: 8px;
 	}
 
-	/* CSS Cũ giữ nguyên */
 	.load-prev-wrapper {
 		padding: 10px;
 		display: flex;

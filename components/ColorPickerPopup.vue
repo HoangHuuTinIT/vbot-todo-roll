@@ -1,4 +1,4 @@
-//components/ColorPickerPopup.vue
+
 <template>
     <view class="color-popup-overlay" v-if="visible" @click="close">
         <view class="color-popup" @click.stop>
@@ -28,5 +28,5 @@ const select = (color) => {
 </script>
 
 <style scoped>
-.color-popup-overlay { /* ... */ }
+.color-popup-overlay {  }
 </style>

@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from 'vue'; // Import computed
+
 	import AppButton from '@/components/AppButton.vue';
-	import { useAuthStore } from '@/stores/auth'; // Import AuthStore
+
 
 	interface Props {
 		visible : boolean;
@@ -41,7 +41,7 @@
 
 	const emit = defineEmits(['update:visible', 'confirm', 'cancel']);
 
-	// 2. Lấy trạng thái Dark Mode
+
 	const authStore = useAuthStore();
 	const isDark = computed(() => authStore.isDark);
 
@@ -56,7 +56,7 @@
 </script>
 
 <style lang="scss" scoped>
-	/* 3. Import Theme */
+
 	@import '@/common/theme.scss';
 
 	.modal-overlay {
@@ -66,7 +66,7 @@
 		right: 0;
 		bottom: 0;
 		background-color: rgba(0, 0, 0, 0.5);
-		/* Giữ nguyên overlay tối */
+
 		z-index: 1000;
 		display: flex;
 		align-items: center;
@@ -75,14 +75,14 @@
 
 	.modal-container {
 		width: 80%;
-		/* Thay #fff bằng biến nền */
+
 		background-color: var(--bg-surface);
 		border-radius: 12px;
 		overflow: hidden;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 		animation: popIn 0.2s ease-out;
 
-		/* Thêm transition để đổi màu mượt mà */
+
 		transition: background-color 0.3s;
 	}
 
@@ -100,7 +100,7 @@
 
 	.modal-header {
 		padding: 15px;
-		/* Thay #eee bằng biến border */
+
 		border-bottom: 1px solid var(--border-color);
 		text-align: center;
 	}
@@ -108,7 +108,7 @@
 	.modal-title {
 		font-size: 18px;
 		font-weight: bold;
-		/* Thay #333 bằng biến text chính */
+
 		color: var(--text-primary);
 	}
 
@@ -116,14 +116,14 @@
 		padding: 20px 15px;
 		text-align: center;
 		font-size: 15px;
-		/* Thay #555 bằng biến text phụ */
+
 		color: var(--text-secondary);
 		line-height: 1.5;
 	}
 
 	.modal-footer {
 		display: flex;
-		/* Thay #eee bằng biến border */
+
 		border-top: 1px solid var(--border-color);
 		padding: 15px;
 		gap: 10px;

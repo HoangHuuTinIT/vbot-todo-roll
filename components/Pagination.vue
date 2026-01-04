@@ -76,11 +76,11 @@
 <style lang="scss" scoped>
 	.pagination-footer {
 		flex-shrink: 0;
-		/* Thay #fff */
+
 		background-color: var(--bg-surface);
 		padding: 10px 15px;
 		padding-bottom: calc(10px + env(safe-area-inset-bottom));
-		/* Thay #eee */
+
 		border-top: 1px solid var(--border-color);
 		box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 		display: flex;
@@ -91,7 +91,7 @@
 	.page-size-selector {
 		display: flex;
 		align-items: center;
-		/* Thay #ddd và #f9f9f9 */
+
 		border: 1px solid var(--border-input);
 		background-color: var(--bg-input);
 		border-radius: 4px;
@@ -100,20 +100,20 @@
 
 	.size-text {
 		font-size: 12px;
-		/* Thay #333 */
+
 		color: var(--text-primary);
 		margin-right: 4px;
 	}
 
 	.dropdown-arrow {
 		font-size: 10px;
-		/* Thay #666 */
+
 		color: var(--text-secondary);
 	}
 
 	.total-text {
 		font-size: 12px;
-		/* Thay #999 */
+
 		color: var(--text-hint);
 		margin: 0 5px;
 	}
@@ -126,7 +126,7 @@
 
 	.page-arrow {
 		font-size: 18px;
-		/* Thay #666 */
+
 		color: var(--text-secondary);
 		padding: 0 10px;
 		font-weight: bold;
@@ -145,7 +145,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* Thay border và màu chữ */
+
 		border: 1px solid var(--border-input);
 		color: var(--text-primary);
 		border-radius: 4px;

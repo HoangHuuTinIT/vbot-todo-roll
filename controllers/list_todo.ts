@@ -119,7 +119,6 @@ export const useListTodoController = () => {
 	} = useCustomerFilter();
 
 	const getTodoList = async (direction : 'init' | 'next' | 'prev' = 'init') => {
-		// Block nếu đang loading
 		if (direction === 'next' && (isLoadingMore.value || pageNo.value > totalPages.value)) return;
 		if (direction === 'prev' && (isLoadingPrev.value || startPage.value <= 1)) return;
 
@@ -135,9 +134,8 @@ export const useListTodoController = () => {
 
 			if (direction === 'next') targetPage = pageNo.value; 
 			else if (direction === 'prev') targetPage = startPage.value - 1;
-			else targetPage = pageNo.value; // Trường hợp init (thường là 1 hoặc targetPage từ jump)
+			else targetPage = pageNo.value; 
 
-			// Build Params
 			let selectedCreatorId = '';
 			if (creatorIndex.value > 0) {
 				const member = rawMemberList.value[creatorIndex.value - 1];
@@ -158,30 +156,24 @@ export const useListTodoController = () => {
 				selectedAssigneeId
 			);
 
-			// Gọi API
 			const [listData, countData] = await Promise.all([
 				getTodos({
 					...filterParams,
 					pageNo: targetPage,
 					pageSize: pageSize.value
 				}),
-				// Chỉ gọi count khi init hoặc chưa có total
 				(direction === 'init' || totalCount.value === 0) ? getTodoCount(filterParams) : Promise.resolve(totalCount.value)
 			]);
 
-			// Xử lý nối dữ liệu
 			if (direction === 'next') {
 				todos.value = [...todos.value, ...(listData || [])];
 			} else if (direction === 'prev') {
-				// QUAN TRỌNG: Nối vào ĐẦU danh sách
 				if (listData && listData.length > 0) {
 					todos.value = [...listData, ...todos.value];
-					startPage.value = targetPage; // Cập nhật lùi startPage
+					startPage.value = targetPage;
 				}
 			} else {
-				// Init
 				todos.value = listData || [];
-				// Nếu init (ví dụ jump page), reset startPage về trang đó
 				startPage.value = targetPage;
 			}
 
@@ -199,8 +191,6 @@ export const useListTodoController = () => {
 			uni.stopPullDownRefresh();
 		}
 	};
-
-	// --- Pagination Handlers ---
 	const onLoadMore = () => {
 		if (pageNo.value < totalPages.value && !isLoadingMore.value && !isLoading.value) {
 			pageNo.value += 1;
@@ -210,21 +200,18 @@ export const useListTodoController = () => {
 
 	const onLoadPrev = async () => {
 		if (startPage.value > 1 && !isLoadingPrev.value && !isLoading.value) {
-			// Trả về Promise để View dùng await tính toán chiều cao
 			await getTodoList('prev');
 		}
 	};
 
 	const onUpdatePageSize = (newSize : number) => {
 		pageSize.value = newSize;
-		resetPagination(); // Reset về trang 1
+		resetPagination(); 
 		getTodoList('init');
 	};
 
 	const jumpToPage = (targetPage : number) => {
 		if (targetPage === pageNo.value && startPage.value === targetPage) return;
-
-		// Khi jump, reset list chỉ chứa trang đích
 		pageNo.value = targetPage;
 		startPage.value = targetPage;
 		activePage.value = targetPage;
@@ -232,7 +219,6 @@ export const useListTodoController = () => {
 		getTodoList('init');
 	};
 
-	// --- Quick Complete Logic ---
 	const openQuickComplete = async () => {
 		isQuickCompleteOpen.value = true;
 		isLoadingQuick.value = true;
@@ -266,7 +252,6 @@ export const useListTodoController = () => {
 			if (res) {
 				showSuccess(t('common.msg_completed'));
 				quickTodos.value = quickTodos.value.filter(t => t.id !== item.id);
-				// Update local list
 				const index = todos.value.findIndex(t => t.id === item.id);
 				if (index !== -1) {
 					todos.value[index].status = TODO_STATUS.DONE;
@@ -280,7 +265,6 @@ export const useListTodoController = () => {
 		}
 	};
 
-	// --- Customer Filter Logic ---
 	const openCustomerPopup = () => {
 		showCustomerModal.value = true;
 		fetchFilterMembers();
@@ -297,7 +281,6 @@ export const useListTodoController = () => {
 		fetchCustomers(filterParams);
 	};
 
-	// --- Delete Logic ---
 	const onRequestDelete = (item : TodoItem) => { itemToDelete.value = item; isConfirmDeleteOpen.value = true; };
 	const cancelDelete = () => { isConfirmDeleteOpen.value = false; itemToDelete.value = null; };
 
@@ -326,7 +309,6 @@ export const useListTodoController = () => {
 		});
 	};
 
-	// --- Filter UI Handlers ---
 	const addNewTask = () => { uni.navigateTo({ url: '/pages/todo/create_todo' }); };
 	const openFilter = () => {
 		isFilterOpen.value = true;
@@ -353,18 +335,17 @@ export const useListTodoController = () => {
 		sourceIndex.value = 0;
 		selectedCustomerName.value = '';
 
-		resetPagination(); // Đã sửa: dùng hàm nội bộ thay vì từ hook bị comment
+		resetPagination();
 		getTodoList('init');
 		closeFilter();
 	};
 
 	const applyFilter = () => {
 		resetPagination();
-		getTodoList('init'); // Đã sửa: Dùng getTodoList thay vì fetchData
+		getTodoList('init');
 		closeFilter();
 	};
 
-	// --- Lifecycle ---
 	onPullDownRefresh(() => {
 		resetPagination();
 		getTodoList('init');
@@ -372,7 +353,7 @@ export const useListTodoController = () => {
 
 	onShow(() => {
 		if (todos.value.length === 0) {
-			getTodoList('init'); // Đã sửa: dùng string 'init'
+			getTodoList('init');
 			fetchCustomers({});
 		}
 	});
@@ -383,10 +364,7 @@ export const useListTodoController = () => {
 		});
 	};
 
-	// UI Helpers (cho phần hiển thị Active Page bên phải)
 	const updateActivePage = (index : number) => {
-		// Hàm này được gọi từ view để cập nhật visual
-		// Logic thực tế đã xử lý ở View (onScroll), hàm này chỉ để set giá trị ref
 		activePage.value = index;
 	};
 
