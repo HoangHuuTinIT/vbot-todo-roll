@@ -501,10 +501,13 @@
 </script>
 
 <style lang="scss" scoped>
-	/* ADDED CLASS FOR MEASURING */
 	.list-view-content-measurer {
-		display: flex;
-		flex-direction: column;
+	    display: flex;
+	    flex-direction: column;
+	    /* Thêm khoảng đệm đỉnh đầu để card đầu tiên không bị dính header */
+	    padding-top: 15px; 
+	    /* Đảm bảo phần dưới cùng cũng có khoảng hở khi cuộn hết cỡ */
+	    padding-bottom: 15px; 
 	}
 
 	.py-2 {
@@ -730,7 +733,7 @@
 	.list-view {
 		height: 100%;
 		width: 100%;
-		padding: 15px;
+		padding: 0 15px;
 		box-sizing: border-box;
 	}
 
