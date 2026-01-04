@@ -26,7 +26,8 @@
 			<view class="list-wrapper">
 				<scroll-view scroll-y class="list-view" :upper-threshold="50" :lower-threshold="200"
 					@scrolltolower="onScrollToLower" @scrolltoupper="onScrollToUpper" @scroll="onScroll"
-					:scroll-top="scrollTop" :scroll-with-animation="enableScrollAnimation">
+					:scroll-top="scrollTop" :scroll-with-animation="enableScrollAnimation"
+					refresher-enabled="true" :refresher-triggered="isRefreshing" @refresherrefresh="onRefresh">
 					<view class="list-view-content-measurer">
 
 						<view v-if="isLoadingPrev" class="loading-state small py-2">
@@ -373,7 +374,9 @@
 		startPage,
 		isLoadingPrev,
 		isLoadingMore, 
-		onLoadPrev
+		onLoadPrev,
+		isRefreshing,
+		onRefresh
 	} = useListTodoController();
 
 	const onScrollToUpper = async () => {

@@ -6,7 +6,7 @@
 		<view class="right-column">
 
 			<view class="date-row">
-				<uni-datetime-picker type="datetime" :value="dueDate" :hide-second="true" :border="false"
+				<uni-datetime-picker type="datetime" :modelValue="dueDate" :hide-second="true" :border="false"
 					@change="onDueDateChange" class="full-width-picker">
 					<view class="item-picker" :class="{ 'placeholder-color': !dueDate }">
 						<text class="picker-label">{{ $t('todo.due_date_label') }}</text>
@@ -19,7 +19,7 @@
 			<view class="inner-divider"></view>
 
 			<view class="date-row">
-				<uni-datetime-picker type="datetime" :value="notifyAt" :hide-second="true" :border="false"
+				<uni-datetime-picker type="datetime" :modelValue="notifyAt" :hide-second="true" :border="false"
 					@change="onNotifyDateChange" class="full-width-picker">
 					<view class="item-picker" :class="{ 'placeholder-color': !notifyAt }">
 						<text class="picker-label">{{ $t('todo.notify_date_label') }}</text>
@@ -34,7 +34,6 @@
 </template>
 
 <script setup lang="ts">
-	import { defineProps, defineEmits } from 'vue';
 	import { useI18n } from 'vue-i18n';
 
 	interface DatePickerProps {

@@ -1,6 +1,6 @@
 // controllers/list_todo.ts
 import { ref, computed, onMounted, nextTick } from 'vue';
-import { onShow, onPullDownRefresh } from '@dcloudio/uni-app';
+import { onShow } from '@dcloudio/uni-app';
 import { getTodos, getTodoCount, deleteTodo, updateTodo } from '@/api/todo';
 import { useAuthStore } from '@/stores/auth';
 import { TODO_STATUS } from '@/utils/constants';
@@ -47,6 +47,7 @@ export const useListTodoController = () => {
 	const isLoading = ref<boolean>(false);
 	const isLoadingMore = ref<boolean>(false);
 	const isLoadingPrev = ref<boolean>(false);
+	const isRefreshing = ref<boolean>(false);
 
 
 	const isFilterOpen = ref<boolean>(false);
@@ -348,10 +349,12 @@ export const useListTodoController = () => {
 		closeFilter();
 	};
 
-	onPullDownRefresh(() => {
+	const onRefresh = async () => {
+		isRefreshing.value = true;
 		resetPagination();
-		getTodoList('init');
-	});
+		await getTodoList('init');
+		isRefreshing.value = false;
+	};
 
 	onShow(() => {
 		if (todos.value.length === 0) {
@@ -371,8 +374,8 @@ export const useListTodoController = () => {
 	};
 
 	return {
-		todos, isLoading, isLoadingMore, isLoadingPrev,
-		onLoadMore, onLoadPrev,
+		todos, isLoading, isLoadingMore, isLoadingPrev, isRefreshing,
+		onLoadMore, onLoadPrev, onRefresh,
 		pageNo, startPage, pageSize, totalCount, totalPages, activePage,
 		isFilterOpen, filter,
 		isConfirmDeleteOpen, itemToDelete,
