@@ -94,7 +94,7 @@
 
 				<view class="pagination-drawer" :class="{ 'expanded': isPaginationExpanded }">
 					<view class="pagination-handle" @click="togglePagination">
-						<text class="current-page-badge">{{ pageNo }}</text> <text class="handle-icon"
+						<text class="current-page-badge">{{ activePage }}</text> <text class="handle-icon"
 							v-if="!isPaginationExpanded">‹</text>
 						<text class="handle-icon" v-else>›</text>
 					</view>
@@ -102,7 +102,7 @@
 					<scroll-view scroll-y class="pagination-list" v-if="isPaginationExpanded">
 						<view class="page-title">{{ $t('common.page') }}</view>
 						<view v-for="p in totalPages" :key="p" class="page-number-item"
-							:class="{ 'active': p === pageNo, 'loaded': p <= pageNo }" @click="handleJumpToPage(p)">
+							:class="{ 'active': p === activePage, 'loaded': p <= pageNo }" @click="handleJumpToPage(p)">
 							{{ p }}
 						</view>
 						<view style="height: 20px;"></view>
@@ -415,10 +415,12 @@
 							scrollTop.value = heightDifference;
 
 							// Bật lại animation sau khi nhảy xong
-							setTimeout(() => {
-								enableScrollAnimation.value = true;
-								// lastScrollTop.value = heightDifference; // Optional sync
-							}, 50);
+							// Bật lại animation sau khi nhảy xong
+							requestAnimationFrame(() => {
+								requestAnimationFrame(() => {
+									enableScrollAnimation.value = true;
+								});
+							});
 						}).exec();
 					}, 50);
 				});
@@ -475,10 +477,14 @@
 		lastScrollTop.value = e.detail.scrollTop;
 
 		// Logic tính toán trang hiện tại (activePage) để highlight UI bên phải
-		const ITEM_HEIGHT_ESTIMATE = 120;
-		const currentIndex = Math.floor(e.detail.scrollTop / ITEM_HEIGHT_ESTIMATE);
+		if (todos.value.length === 0) return;
+		
+		const scrollHeight = e.detail.scrollHeight || 0;
+		const avgItemHeight = scrollHeight > 0 ? (scrollHeight / todos.value.length) : 120;
+		
+		const currentIndex = Math.floor(e.detail.scrollTop / avgItemHeight);
 
-		if (currentIndex >= 0 && todos.value.length > 0) {
+		if (currentIndex >= 0) {
 			const relativeIndex = Math.min(currentIndex, todos.value.length - 1);
 			const p = Math.ceil((todos.value.length) / pageSize.value);
 			const currentChunk = Math.floor(relativeIndex / pageSize.value);
