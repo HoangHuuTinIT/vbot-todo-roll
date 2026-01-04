@@ -27,7 +27,8 @@
 				<scroll-view scroll-y class="list-view" :upper-threshold="50" :lower-threshold="200"
 					@scrolltolower="onScrollToLower" @scrolltoupper="onScrollToUpper" @scroll="onScroll"
 					:scroll-top="scrollTop" :scroll-with-animation="enableScrollAnimation"
-					refresher-enabled="true" :refresher-triggered="isRefreshing" @refresherrefresh="onRefresh">
+					refresher-enabled="true" :refresher-threshold="50" refresher-background="transparent"
+					:refresher-triggered="isRefreshing" @refresherrefresh="onRefresh">
 					<view class="list-view-content-measurer">
 
 						<view v-if="isLoadingPrev" class="loading-state small py-2">
