@@ -1,6 +1,7 @@
 //locale/en.json
 {
 	"common": {
+		"loading_more":":Loading more...",
 		"loading": "Loading data...",
 		"no_data": "No data available",
 		"all": "All",
@@ -44,7 +45,7 @@
 		"network_restored": "Connection restored",
 		"no_internet": "No internet connection",
 		"no_name": "(No Name)",
-		"page":"Page",
+		"page":"Page"
 	},
 	"todo": {
 		"todo_detail_title":"Todo Detail",

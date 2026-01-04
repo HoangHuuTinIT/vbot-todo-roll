@@ -705,8 +705,7 @@
 		align-items: center;
 		color: #007aff;
 		padding: 5px 10px;
-		background: rgba(0, 122, 255, 0.1);
-		border-radius: 20px;
+		
 	}
 
 	.add-task-simple:active {

@@ -3232,7 +3232,7 @@ to {
   padding: 15px;
 }
 .title-input-group[data-v-4d5a6d0e] {
-  margin-top: 10px;
+  margin-top: 0px;
 }
 .back-btn[data-v-4d5a6d0e] {
   width: 40px;
@@ -3331,11 +3331,17 @@ to {
   color: var(--text-hint);
 }
 .footer-action[data-v-4d5a6d0e] {
-  margin-top: 30px;
+  /* 1. Giảm khoảng cách với phần Ngày giờ bên trên (từ 30px -> 10px) */
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  padding-bottom: 30px;
+  /* 2. Giảm khoảng trống bên dưới (từ 30px -> 10px + vùng an toàn của iPhone) */
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+.customer-item[data-v-4d5a6d0e] {
+  margin-top: 12px;
+  /* Tạo khoảng cách với Editor bên trên */
 }
 .input-trigger[data-v-4d5a6d0e] {
   flex: 1;

@@ -26,14 +26,14 @@
 
 			<TodoEditor v-model="form.desc" :placeholder="$t('editor.placeholder')" />
 
-			<view class="flat-item" @click="openCustomerPopup">
-				<view class="item-left">
-					<image src="https://img.icons8.com/ios/50/666666/price-tag.png" class="item-icon"></image>
-				</view>
-				<view class="input-trigger" :class="{ 'placeholder': !form.customer }">
-					{{ form.customer || $t('todo.select_customer') }}
-				</view>
-				<text class="arrow-icon">›</text>
+			<view class="flat-item customer-item" @click="openCustomerPopup">
+			    <view class="item-left">
+			        <image src="https://img.icons8.com/ios/50/666666/price-tag.png" class="item-icon"></image>
+			    </view>
+			    <view class="input-trigger" :class="{ 'placeholder': !form.customer }">
+			        {{ form.customer || $t('todo.select_customer') }}
+			    </view>
+			    <text class="arrow-icon">›</text>
 			</view>
 
 			<CustomerModal :visible="showCustomerModal" :loading="loadingCustomer" :loadingMore="loadingMore"
@@ -158,7 +158,7 @@
 	}
 
 	.title-input-group {
-		margin-top: 10px;
+		margin-top: 0px;
 	}
 
 	.back-btn {
@@ -273,13 +273,19 @@
 	}
 
 	.footer-action {
-		margin-top: 30px;
-		display: flex;
-		justify-content: space-between;
-		gap: 15px;
-		padding-bottom: 30px;
+	    /* 1. Giảm khoảng cách với phần Ngày giờ bên trên (từ 30px -> 10px) */
+	    margin-top: 10px; 
+	
+	    display: flex;
+	    justify-content: space-between;
+	    gap: 15px;
+	
+	    /* 2. Giảm khoảng trống bên dưới (từ 30px -> 10px + vùng an toàn của iPhone) */
+	    padding-bottom: calc(10px + env(safe-area-inset-bottom));
 	}
-
+	.customer-item {
+	    margin-top: 12px; /* Tạo khoảng cách với Editor bên trên */
+	}
 	.input-trigger {
 		flex: 1;
 		font-size: 15px;
