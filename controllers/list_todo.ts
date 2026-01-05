@@ -38,6 +38,18 @@ const useInfinitePagination = (defaultSize = 15) => {
 export const useListTodoController = () => {
 	const { t } = useI18n();
 	const todos = ref<TodoItem[]>([]);
+	const debugLogs = ref<string[]>([]);
+
+	const addLog = (msg: string) => {
+		const time = new Date().toLocaleTimeString();
+		const logLine = `[${time}] ${msg}`;
+		console.log(logLine);
+		debugLogs.value.unshift(logLine);
+		if (debugLogs.value.length > 50) debugLogs.value.pop();
+	};
+
+	// Session ID helps prevent race conditions where old requests return after a new page jump
+	let currentFetchSession = 0;
 
 	const { startPage, pageNo, pageSize, totalCount, totalPages, activePage, resetPagination } = useInfinitePagination(15);
 
@@ -123,7 +135,7 @@ export const useListTodoController = () => {
 		console.log(`[getTodoList] Called with direction=${direction}. isLoadingPrev=${isLoadingPrev.value}, startPage=${startPage.value}, pageNo=${pageNo.value}`);
 		if (direction === 'next' && (isLoadingMore.value || pageNo.value > totalPages.value)) return;
 		if (direction === 'prev' && (isLoadingPrev.value || startPage.value <= 1)) {
-			console.log(`[getTodoList] SKIPPING prev load: isLoadingPrev=${isLoadingPrev.value}, startPage=${startPage.value}`);
+			addLog(`[getTodoList] SKIPPING prev load: isLoadingPrev=${isLoadingPrev.value}, startPage=${startPage.value}`);
 			return;
 		}
 
@@ -134,12 +146,18 @@ export const useListTodoController = () => {
 			todos.value = [];
 		}
 
+		let sessionId: number;
+
 		try {
+			sessionId = currentFetchSession;
 			let targetPage = 1;
 
 			if (direction === 'next') targetPage = pageNo.value;
 			else if (direction === 'prev') targetPage = startPage.value - 1;
 			else targetPage = pageNo.value;
+
+			// Check session before making request (optimization)
+			if (sessionId !== currentFetchSession) return;
 
 			let selectedCreatorId = '';
 			if (creatorIndex.value > 0) {
@@ -170,6 +188,12 @@ export const useListTodoController = () => {
 				(direction === 'init' || totalCount.value === 0) ? getTodoCount(filterParams) : Promise.resolve(totalCount.value)
 			]);
 
+			// Check session again after request returns
+			if (sessionId !== currentFetchSession) {
+				console.log(`[getTodoList] Bỏ qua kết quả do phiên cũ (Session: ${sessionId}, Current: ${currentFetchSession})`);
+				return;
+			}
+
 			if (direction === 'next') {
 				todos.value = [...todos.value, ...(listData || [])];
 			} else if (direction === 'prev') {
@@ -190,10 +214,14 @@ export const useListTodoController = () => {
 			console.error(error);
 			showError(t('common.error_load'));
 		} finally {
-			isLoading.value = false;
-			isLoadingMore.value = false;
-			isLoadingPrev.value = false;
-			uni.stopPullDownRefresh();
+			// Only reset loading state if this session is still valid
+			// If invalid, it means a new request (like jumpToPage) has taken over and manages the state
+			if (typeof sessionId !== 'undefined' && currentFetchSession === sessionId) {
+				isLoading.value = false;
+				isLoadingMore.value = false;
+				isLoadingPrev.value = false;
+				uni.stopPullDownRefresh();
+			}
 		}
 	};
 	const onLoadMore = () => {
@@ -204,12 +232,12 @@ export const useListTodoController = () => {
 	};
 
 	const onLoadPrev = async () => {
-		console.log(`[onLoadPrev] Triggered. startPage=${startPage.value}, isLoadingPrev=${isLoadingPrev.value}, isLoading=${isLoading.value}`);
+		addLog(`[onLoadPrev] Triggered. startPage=${startPage.value}, isLoadingPrev=${isLoadingPrev.value}, isLoading=${isLoading.value}`);
 		if (startPage.value > 1 && !isLoadingPrev.value && !isLoading.value) {
-			console.log(`[onLoadPrev] calling getTodoList('prev')`);
+			addLog(`[onLoadPrev] calling getTodoList('prev')`);
 			await getTodoList('prev');
 		} else {
-			console.log(`[onLoadPrev] Ignored. Condition failed.`);
+			addLog(`[onLoadPrev] Ignored. Condition failed.`);
 		}
 	};
 
@@ -224,7 +252,13 @@ export const useListTodoController = () => {
 	const jumpToPage = async (targetPage: number): Promise<number | null> => {
 		if (targetPage === activePage.value && todos.value.length > 0) return null;
 
+		// Start new session
+		currentFetchSession++;
+
 		isLoading.value = true;
+		isLoadingPrev.value = false; // Reset flags to prevent locks
+		isLoadingMore.value = false;
+
 		todos.value = []; // Reset list trước khi load để tránh hiển thị dữ liệu cũ/lỗi
 
 		try {
@@ -309,9 +343,12 @@ export const useListTodoController = () => {
 			console.log(`[JumpToPage] DONE. State updated: startPage=${startPage.value}, pageNo=${pageNo.value}, activePage=${activePage.value}`);
 
 			let jumpToIndex = 0;
+			// [FIX] Sử dụng số lượng item thực tế đã load được ở trang trước để tính index nhảy đến
+			// Thay vì dùng pageSize (vì có thể trang trước bị filter ít hơn pageSize)
 			if (startTarget < targetPage) {
-				jumpToIndex = pageSize.value;
+				jumpToIndex = beforeList.length;
 			}
+			addLog(`[JumpToPage] Calculated jumpToIndex=${jumpToIndex}. beforeList.length=${beforeList.length}`);
 
 			return jumpToIndex;
 
@@ -498,6 +535,8 @@ export const useListTodoController = () => {
 		loadingMore, loadMoreCustomers,
 		isQuickCompleteOpen, quickTodos, isLoadingQuick,
 		openQuickComplete, closeQuickComplete, handleQuickMarkDone,
-		goToDetail
+
+		goToDetail,
+		debugLogs, addLog
 	};
 };

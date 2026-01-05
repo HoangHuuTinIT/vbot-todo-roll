@@ -280,6 +280,13 @@
 
 		<GlobalMessage />
 		<GlobalNotification />
+		
+		<!-- DEBUG CONSOLE -->
+		<scroll-view scroll-y class="debug-console" v-if="debugLogs.length > 0">
+			<view style="padding: 5px;">
+				<view v-for="(log, index) in debugLogs" :key="index" class="debug-line">{{ log }}</view>
+			</view>
+		</scroll-view>
 	</view>
 </template>
 <script setup lang="ts">
@@ -378,7 +385,8 @@
 		isLoadingMore, 
 		onLoadPrev,
 		isRefreshing,
-		onRefresh
+		onRefresh,
+		debugLogs, addLog
 	} = useListTodoController();
 
 	// Trạng thái đang khôi phục vị trí cuộn
@@ -387,6 +395,7 @@
 	const isRefresherLocked = ref(false);
 
 	const onScrollToUpper = async () => {
+		addLog(`[UI] ScrollToUpper: startPage=${startPage.value}, loading=${isLoading.value}, prev=${isLoadingPrev.value}, restore=${isRestoringScroll.value}, lock=${isRefresherLocked.value}`);
 		// Chặn nếu đang load hoặc đang restore scroll hoặc đang bị lock
 		if (isLoadingPrev.value || isLoading.value || startPage.value <= 1 || isRestoringScroll.value || isRefresherLocked.value) return;
 
@@ -404,6 +413,7 @@
 			const oldHeight = rect.height;
 
 			onLoadPrev().then(() => {
+				addLog(`[UI] onLoadPrev success. Calculating new height...`);
 				// Sử dụng nextTick để đảm bảo DOM đã được cập nhật
 				nextTick(() => {
 					// Thêm một chút delay nhỏ để đảm bảo render hoàn tất
@@ -441,9 +451,21 @@
 						}).exec();
 					}, 50);
 				});
-			}).catch(() => {
+
+			}).catch((e) => {
+				addLog(`[UI] Load Prev Error: ${e}`);
 				isRestoringScroll.value = false;
 				isRefresherLocked.value = false;
+			}).finally(() => {
+				// Safety unlock after 2 seconds in case DOM query fails
+				setTimeout(() => {
+					if (isRestoringScroll.value) {
+						addLog(`[UI] Forcing Unlock (Safety Timeout)`);
+						isRestoringScroll.value = false;
+						isRefresherLocked.value = false;
+						enableScrollAnimation.value = true;
+					}
+				}, 2000);
 			});
 		}).exec();
 	};
@@ -523,14 +545,18 @@
 									offset += rects[i].height + 15; // 15 là margin-bottom
 								}
 								// Cộng thêm padding top của list nếu có
-								offset += 15; 
+								offset += 15;
+								
+								// [FIX] Cộng thêm 5px để đảm bảo item trôi qua mép trên 1 chút
+								// Giúp hàm onScroll nhận diện đúng index > ngưỡng chuyển trang
+								offset += 5; 
 								
 								scrollTop.value = lastScrollTop.value;
 								setTimeout(() => { scrollTop.value = offset; }, 10);
 							} else {
 								// Fallback nếu không đo được
 								const estHeight = 135; // 120 height + 15 margin
-								const offset = jumpToIndex * estHeight;
+								const offset = jumpToIndex * estHeight + 5; // [FIX] +5px tương tự
 								scrollTop.value = lastScrollTop.value;
 								setTimeout(() => { scrollTop.value = offset; }, 10);
 							}
@@ -794,8 +820,29 @@
 		height: 100%;
 		width: 100%;
 		padding: 0 15px;
-		box-sizing: border-box;
 	}
+
+	.debug-console {
+		position: fixed;
+		bottom: 100px;
+		left: 10px;
+		right: 10px;
+		height: 200px;
+		background: rgba(0, 0, 0, 0.85);
+		border-radius: 8px;
+		z-index: 9999;
+		border: 1px solid #333;
+		pointer-events: none;
+	}
+	.debug-line {
+		color: #00ff00;
+		font-size: 11px;
+		font-family: monospace;
+		margin-bottom: 2px;
+		line-height: 1.4;
+		text-shadow: 1px 1px 1px #000;
+	}
+
 
 	.pagination-drawer {
 		position: absolute;
