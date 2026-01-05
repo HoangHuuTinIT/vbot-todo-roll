@@ -48,7 +48,6 @@ export const useListTodoController = () => {
 		if (debugLogs.value.length > 50) debugLogs.value.pop();
 	};
 
-	// Session ID helps prevent race conditions where old requests return after a new page jump
 	let currentFetchSession = 0;
 
 	const { startPage, pageNo, pageSize, totalCount, totalPages, activePage, resetPagination } = useInfinitePagination(15);
@@ -156,7 +155,6 @@ export const useListTodoController = () => {
 			else if (direction === 'prev') targetPage = startPage.value - 1;
 			else targetPage = pageNo.value;
 
-			// Check session before making request (optimization)
 			if (sessionId !== currentFetchSession) return;
 
 			let selectedCreatorId = '';
@@ -188,7 +186,6 @@ export const useListTodoController = () => {
 				(direction === 'init' || totalCount.value === 0) ? getTodoCount(filterParams) : Promise.resolve(totalCount.value)
 			]);
 
-			// Check session again after request returns
 			if (sessionId !== currentFetchSession) {
 				console.log(`[getTodoList] Bỏ qua kết quả do phiên cũ (Session: ${sessionId}, Current: ${currentFetchSession})`);
 				return;
@@ -214,8 +211,7 @@ export const useListTodoController = () => {
 			console.error(error);
 			showError(t('common.error_load'));
 		} finally {
-			// Only reset loading state if this session is still valid
-			// If invalid, it means a new request (like jumpToPage) has taken over and manages the state
+
 			if (typeof sessionId !== 'undefined' && currentFetchSession === sessionId) {
 				isLoading.value = false;
 				isLoadingMore.value = false;
@@ -247,26 +243,21 @@ export const useListTodoController = () => {
 		getTodoList('init');
 	};
 
-	// Trả về Promise<number> là index của phần tử đầu tiên của trang đích trong mảng todos
-	// để UI có thể scroll tới đó
 	const jumpToPage = async (targetPage: number): Promise<number | null> => {
 		if (targetPage === activePage.value && todos.value.length > 0) return null;
 
-		// Start new session
 		currentFetchSession++;
 
 		isLoading.value = true;
-		isLoadingPrev.value = false; // Reset flags to prevent locks
+		isLoadingPrev.value = false;
 		isLoadingMore.value = false;
 
-		todos.value = []; // Reset list trước khi load để tránh hiển thị dữ liệu cũ/lỗi
+		todos.value = [];
 
 		try {
 			const startTarget = Math.max(1, targetPage - 1);
 			const endTarget = Math.min(totalPages.value, targetPage + 1);
 			console.log(`[JumpToPage] Target: ${targetPage}. Loading Range: ${startTarget} to ${endTarget}. Total Pages: ${totalPages.value}`);
-
-			// ... strict sequential loading ...
 
 			let selectedCreatorId = '';
 			if (creatorIndex.value > 0) {
@@ -292,7 +283,7 @@ export const useListTodoController = () => {
 			let targetList: TodoItem[] = [];
 			let afterList: TodoItem[] = [];
 
-			// 1. Load Previous Page Strictly First
+
 			if (startTarget < targetPage) {
 				console.log(`[JumpToPage] 1. Requesting PREV page ${startTarget}...`);
 				const res = await getTodos({
@@ -303,7 +294,7 @@ export const useListTodoController = () => {
 				if (Array.isArray(res)) beforeList = res;
 			}
 
-			// 2. Load Target Page Strictly Second
+
 			console.log(`[JumpToPage] 2. Requesting TARGET page ${targetPage}...`);
 			const resTarget = await getTodos({
 				...filterParams,
@@ -312,7 +303,7 @@ export const useListTodoController = () => {
 			});
 			if (Array.isArray(resTarget)) targetList = resTarget;
 
-			// 3. Load Next Page Strictly Last
+
 			if (endTarget > targetPage) {
 				console.log(`[JumpToPage] 3. Requesting NEXT page ${endTarget}...`);
 				const res = await getTodos({
@@ -323,7 +314,7 @@ export const useListTodoController = () => {
 				if (Array.isArray(res)) afterList = res;
 			}
 
-			// Gộp kết quả: Prev + Target + Next
+
 			let combinedTodos: TodoItem[] = [];
 
 			if (beforeList.length > 0) combinedTodos = [...combinedTodos, ...beforeList];
@@ -332,10 +323,10 @@ export const useListTodoController = () => {
 
 			console.log(`[JumpToPage] Sequential Load Stats: Prev(${beforeList.length}) + Target(${targetList.length}) + Next(${afterList.length}) = Total(${combinedTodos.length})`);
 
-			// ATOMIC UPDATE
+
 			todos.value = combinedTodos;
 
-			// Cập nhật trạng thái phân trang
+
 			startPage.value = startTarget;
 			pageNo.value = endTarget;
 			activePage.value = targetPage;
@@ -343,8 +334,7 @@ export const useListTodoController = () => {
 			console.log(`[JumpToPage] DONE. State updated: startPage=${startPage.value}, pageNo=${pageNo.value}, activePage=${activePage.value}`);
 
 			let jumpToIndex = 0;
-			// [FIX] Sử dụng số lượng item thực tế đã load được ở trang trước để tính index nhảy đến
-			// Thay vì dùng pageSize (vì có thể trang trước bị filter ít hơn pageSize)
+
 			if (startTarget < targetPage) {
 				jumpToIndex = beforeList.length;
 			}
@@ -434,7 +424,6 @@ export const useListTodoController = () => {
 			await deleteTodo(idToDelete);
 			showSuccess(t('common.success_delete'));
 			isConfirmDeleteOpen.value = false;
-			// Cập nhật danh sách local sau khi xóa thành công
 			todos.value = todos.value.filter(t => t.id !== idToDelete);
 			totalCount.value = Math.max(0, totalCount.value - 1);
 			itemToDelete.value = null;

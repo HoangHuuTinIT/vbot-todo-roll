@@ -280,13 +280,7 @@
 
 		<GlobalMessage />
 		<GlobalNotification />
-		
-		<!-- DEBUG CONSOLE -->
-		<scroll-view scroll-y class="debug-console" v-if="debugLogs.length > 0">
-			<view style="padding: 5px;">
-				<view v-for="(log, index) in debugLogs" :key="index" class="debug-line">{{ log }}</view>
-			</view>
-		</scroll-view>
+
 	</view>
 </template>
 <script setup lang="ts">
@@ -388,20 +382,16 @@
 		onRefresh,
 		debugLogs, addLog
 	} = useListTodoController();
-
-	// Trạng thái đang khôi phục vị trí cuộn
 	const isRestoringScroll = ref(false);
-	// Trạng thái khóa refresher để tránh xung đột
 	const isRefresherLocked = ref(false);
 
 	const onScrollToUpper = async () => {
 		addLog(`[UI] ScrollToUpper: startPage=${startPage.value}, loading=${isLoading.value}, prev=${isLoadingPrev.value}, restore=${isRestoringScroll.value}, lock=${isRefresherLocked.value}`);
-		// Chặn nếu đang load hoặc đang restore scroll hoặc đang bị lock
 		if (isLoadingPrev.value || isLoading.value || startPage.value <= 1 || isRestoringScroll.value || isRefresherLocked.value) return;
 
 		console.log("Trigger Load Prev Page:", startPage.value - 1);
-		isRestoringScroll.value = true; // Bắt đầu tính toán restore
-		isRefresherLocked.value = true; // Khóa refresher ngay lập tức
+		isRestoringScroll.value = true; 
+		isRefresherLocked.value = true; 
 
 		const query = uni.createSelectorQuery().in(instance);
 		query.select('.list-view-content-measurer').boundingClientRect(rect => {
@@ -414,9 +404,7 @@
 
 			onLoadPrev().then(() => {
 				addLog(`[UI] onLoadPrev success. Calculating new height...`);
-				// Sử dụng nextTick để đảm bảo DOM đã được cập nhật
 				nextTick(() => {
-					// Thêm một chút delay nhỏ để đảm bảo render hoàn tất
 					setTimeout(() => {
 						const queryNew = uni.createSelectorQuery().in(instance);
 						queryNew.select('.list-view-content-measurer').boundingClientRect(newRect => {
@@ -431,19 +419,15 @@
 
 							console.log(`Old: ${oldHeight}, New: ${newHeight}, Diff: ${heightDifference}`);
 							
-							// Tắt animation để tránh nhảy list
 							enableScrollAnimation.value = false;
 							scrollTop.value = heightDifference;
-							
-							// Đợi UI cập nhật xong mới mở khóa
+
 							requestAnimationFrame(() => {
 								requestAnimationFrame(() => {
 									enableScrollAnimation.value = true;
-									isRestoringScroll.value = false; // Mở khóa tính toán cuộn
+									isRestoringScroll.value = false; 
 								});
 							});
-
-							// Mở khóa Refresher sau một khoảng delay để triệt tiêu quán tính cuộn
 							setTimeout(() => {
 								isRefresherLocked.value = false;
 							}, 800);
@@ -457,7 +441,6 @@
 				isRestoringScroll.value = false;
 				isRefresherLocked.value = false;
 			}).finally(() => {
-				// Safety unlock after 2 seconds in case DOM query fails
 				setTimeout(() => {
 					if (isRestoringScroll.value) {
 						addLog(`[UI] Forcing Unlock (Safety Timeout)`);
@@ -514,49 +497,31 @@
 		jumpToPage(page).then((jumpToIndex) => {
 			if (jumpToIndex === null) return;
 			
-			// Tính toán vị trí scroll dựa trên index
 			nextTick(() => {
 				setTimeout(() => {
-					// Lấy chiều cao trung bình của item (ước lượng hoặc tính toán)
-					// Cách tốt nhất là query DOM để lấy vị trí của item thứ jumpToIndex
+
 					if (jumpToIndex === 0) {
 						scrollTop.value = lastScrollTop.value;
 						setTimeout(() => { scrollTop.value = 0; }, 10);
 					} else {
-						// Logic cuộn đến item cụ thể
-						// Vì jumpToIndex là index trong mảng todos hiện tại
-						// Ta cần cuộn sao cho item này nằm ở đầu màn hình
-						
-						// Tạm thời dùng ước lượng chiều cao item ~120px nếu không query được
-						// Hoặc tốt hơn là dùng scroll-into-view nếu có ID
-						// Nhưng ở đây ta dùng scrollTop 
+
 						
 						const query = uni.createSelectorQuery().in(instance);
 						query.selectAll('.card-item').boundingClientRect(rects => {
 							if (Array.isArray(rects) && rects.length > jumpToIndex) {
-								// Lấy top của item mục tiêu so với list-view
-								// Lưu ý: boundingClientRect trả về vị trí so với viewport
-								// Cần cộng thêm scrollTop hiện tại để ra vị trí tuyệt đối trong scroll-view context
-								// Nhưng ở đây ta cần tính offset từ đầu list
-								
-								// Cách đơn giản hơn: Tính tổng chiều cao các item trước đó
+
 								let offset = 0;
 								for(let i=0; i<jumpToIndex; i++) {
-									offset += rects[i].height + 15; // 15 là margin-bottom
+									offset += rects[i].height + 15;
 								}
-								// Cộng thêm padding top của list nếu có
 								offset += 15;
-								
-								// [FIX] Cộng thêm 5px để đảm bảo item trôi qua mép trên 1 chút
-								// Giúp hàm onScroll nhận diện đúng index > ngưỡng chuyển trang
 								offset += 5; 
 								
 								scrollTop.value = lastScrollTop.value;
 								setTimeout(() => { scrollTop.value = offset; }, 10);
 							} else {
-								// Fallback nếu không đo được
-								const estHeight = 135; // 120 height + 15 margin
-								const offset = jumpToIndex * estHeight + 5; // [FIX] +5px tương tự
+								const estHeight = 135;
+								const offset = jumpToIndex * estHeight + 5;
 								scrollTop.value = lastScrollTop.value;
 								setTimeout(() => { scrollTop.value = offset; }, 10);
 							}
@@ -820,6 +785,7 @@
 		height: 100%;
 		width: 100%;
 		padding: 0 15px;
+		box-sizing: border-box;
 	}
 
 	.debug-console {
