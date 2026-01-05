@@ -120,8 +120,12 @@ export const useListTodoController = () => {
 	} = useCustomerFilter();
 
 	const getTodoList = async (direction: 'init' | 'next' | 'prev' = 'init') => {
+		console.log(`[getTodoList] Called with direction=${direction}. isLoadingPrev=${isLoadingPrev.value}, startPage=${startPage.value}, pageNo=${pageNo.value}`);
 		if (direction === 'next' && (isLoadingMore.value || pageNo.value > totalPages.value)) return;
-		if (direction === 'prev' && (isLoadingPrev.value || startPage.value <= 1)) return;
+		if (direction === 'prev' && (isLoadingPrev.value || startPage.value <= 1)) {
+			console.log(`[getTodoList] SKIPPING prev load: isLoadingPrev=${isLoadingPrev.value}, startPage=${startPage.value}`);
+			return;
+		}
 
 		if (direction === 'next') isLoadingMore.value = true;
 		else if (direction === 'prev') isLoadingPrev.value = true;
@@ -200,8 +204,12 @@ export const useListTodoController = () => {
 	};
 
 	const onLoadPrev = async () => {
+		console.log(`[onLoadPrev] Triggered. startPage=${startPage.value}, isLoadingPrev=${isLoadingPrev.value}, isLoading=${isLoading.value}`);
 		if (startPage.value > 1 && !isLoadingPrev.value && !isLoading.value) {
+			console.log(`[onLoadPrev] calling getTodoList('prev')`);
 			await getTodoList('prev');
+		} else {
+			console.log(`[onLoadPrev] Ignored. Condition failed.`);
 		}
 	};
 
@@ -211,13 +219,110 @@ export const useListTodoController = () => {
 		getTodoList('init');
 	};
 
-	const jumpToPage = (targetPage: number) => {
-		if (targetPage === pageNo.value && startPage.value === targetPage) return;
-		pageNo.value = targetPage;
-		startPage.value = targetPage;
-		activePage.value = targetPage;
+	// Trả về Promise<number> là index của phần tử đầu tiên của trang đích trong mảng todos
+	// để UI có thể scroll tới đó
+	const jumpToPage = async (targetPage: number): Promise<number | null> => {
+		if (targetPage === activePage.value && todos.value.length > 0) return null;
 
-		getTodoList('init');
+		isLoading.value = true;
+		todos.value = []; // Reset list trước khi load để tránh hiển thị dữ liệu cũ/lỗi
+
+		try {
+			const startTarget = Math.max(1, targetPage - 1);
+			const endTarget = Math.min(totalPages.value, targetPage + 1);
+			console.log(`[JumpToPage] Target: ${targetPage}. Loading Range: ${startTarget} to ${endTarget}. Total Pages: ${totalPages.value}`);
+
+			// ... strict sequential loading ...
+
+			let selectedCreatorId = '';
+			if (creatorIndex.value > 0) {
+				const member = rawMemberList.value[creatorIndex.value - 1];
+				selectedCreatorId = member.memberUID || '';
+			}
+
+			let selectedAssigneeId = '';
+			if (assigneeIndex.value > 0) {
+				const member = rawMemberList.value[assigneeIndex.value - 1];
+				selectedAssigneeId = member.memberUID || '';
+			}
+
+			const filterParams = buildTodoParams(
+				filter.value,
+				statusValues[statusIndex.value],
+				sourceValues[sourceIndex.value],
+				selectedCreatorId,
+				selectedAssigneeId
+			);
+
+			let beforeList: TodoItem[] = [];
+			let targetList: TodoItem[] = [];
+			let afterList: TodoItem[] = [];
+
+			// 1. Load Previous Page Strictly First
+			if (startTarget < targetPage) {
+				console.log(`[JumpToPage] 1. Requesting PREV page ${startTarget}...`);
+				const res = await getTodos({
+					...filterParams,
+					pageNo: startTarget,
+					pageSize: pageSize.value
+				});
+				if (Array.isArray(res)) beforeList = res;
+			}
+
+			// 2. Load Target Page Strictly Second
+			console.log(`[JumpToPage] 2. Requesting TARGET page ${targetPage}...`);
+			const resTarget = await getTodos({
+				...filterParams,
+				pageNo: targetPage,
+				pageSize: pageSize.value
+			});
+			if (Array.isArray(resTarget)) targetList = resTarget;
+
+			// 3. Load Next Page Strictly Last
+			if (endTarget > targetPage) {
+				console.log(`[JumpToPage] 3. Requesting NEXT page ${endTarget}...`);
+				const res = await getTodos({
+					...filterParams,
+					pageNo: endTarget,
+					pageSize: pageSize.value
+				});
+				if (Array.isArray(res)) afterList = res;
+			}
+
+			// Gộp kết quả: Prev + Target + Next
+			let combinedTodos: TodoItem[] = [];
+
+			if (beforeList.length > 0) combinedTodos = [...combinedTodos, ...beforeList];
+			if (targetList.length > 0) combinedTodos = [...combinedTodos, ...targetList];
+			if (afterList.length > 0) combinedTodos = [...combinedTodos, ...afterList];
+
+			console.log(`[JumpToPage] Sequential Load Stats: Prev(${beforeList.length}) + Target(${targetList.length}) + Next(${afterList.length}) = Total(${combinedTodos.length})`);
+
+			// ATOMIC UPDATE
+			todos.value = combinedTodos;
+
+			// Cập nhật trạng thái phân trang
+			startPage.value = startTarget;
+			pageNo.value = endTarget;
+			activePage.value = targetPage;
+
+			console.log(`[JumpToPage] DONE. State updated: startPage=${startPage.value}, pageNo=${pageNo.value}, activePage=${activePage.value}`);
+
+			let jumpToIndex = 0;
+			if (startTarget < targetPage) {
+				jumpToIndex = pageSize.value;
+			}
+
+			return jumpToIndex;
+
+		} catch (error) {
+			console.error("Jump Page Error", error);
+			showError(t('common.error_load'));
+			return null;
+		} finally {
+			isLoading.value = false;
+			uni.stopPullDownRefresh();
+		}
 	};
 
 	const openQuickComplete = async () => {

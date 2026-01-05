@@ -27,11 +27,12 @@
 				<scroll-view scroll-y class="list-view" :upper-threshold="50" :lower-threshold="200"
 					@scrolltolower="onScrollToLower" @scrolltoupper="onScrollToUpper" @scroll="onScroll"
 					:scroll-top="scrollTop" :scroll-with-animation="enableScrollAnimation"
-					refresher-enabled="true" :refresher-threshold="50" refresher-background="transparent"
+					:refresher-enabled="startPage === 1 && !isLoadingPrev && !isRestoringScroll && !isRefresherLocked" :refresher-threshold="50" refresher-background="transparent"
 					:refresher-triggered="isRefreshing" @refresherrefresh="onRefresh">
 					<view class="list-view-content-measurer">
 
-						<view v-if="isLoadingPrev" class="loading-state small py-2">
+						<view v-if="isLoadingPrev" class="loading-state load-prev py-2">
+							<image src="/static/loading-dots.gif" class="icon-small" v-if="false" /> 
 							<text>{{ $t('common.loading') }}...</text>
 						</view>
 
@@ -380,40 +381,73 @@
 		onRefresh
 	} = useListTodoController();
 
+	// Trạng thái đang khôi phục vị trí cuộn
+	const isRestoringScroll = ref(false);
+	// Trạng thái khóa refresher để tránh xung đột
+	const isRefresherLocked = ref(false);
+
 	const onScrollToUpper = async () => {
-		if (isLoadingPrev.value || isLoading.value || startPage.value <= 1) return;
+		// Chặn nếu đang load hoặc đang restore scroll hoặc đang bị lock
+		if (isLoadingPrev.value || isLoading.value || startPage.value <= 1 || isRestoringScroll.value || isRefresherLocked.value) return;
 
 		console.log("Trigger Load Prev Page:", startPage.value - 1);
+		isRestoringScroll.value = true; // Bắt đầu tính toán restore
+		isRefresherLocked.value = true; // Khóa refresher ngay lập tức
 
 		const query = uni.createSelectorQuery().in(instance);
 		query.select('.list-view-content-measurer').boundingClientRect(rect => {
-			if (!rect) return;
+			if (!rect) {
+				isRestoringScroll.value = false;
+				isRefresherLocked.value = false;
+				return;
+			}
 			const oldHeight = rect.height;
 
 			onLoadPrev().then(() => {
+				// Sử dụng nextTick để đảm bảo DOM đã được cập nhật
 				nextTick(() => {
+					// Thêm một chút delay nhỏ để đảm bảo render hoàn tất
 					setTimeout(() => {
 						const queryNew = uni.createSelectorQuery().in(instance);
 						queryNew.select('.list-view-content-measurer').boundingClientRect(newRect => {
-							if (!newRect) return;
+							if (!newRect) {
+								isRestoringScroll.value = false;
+								isRefresherLocked.value = false;
+								return;
+							}
 
 							const newHeight = newRect.height;
 							const heightDifference = newHeight - oldHeight;
 
 							console.log(`Old: ${oldHeight}, New: ${newHeight}, Diff: ${heightDifference}`);
+							
+							// Tắt animation để tránh nhảy list
 							enableScrollAnimation.value = false;
 							scrollTop.value = heightDifference;
+							
+							// Đợi UI cập nhật xong mới mở khóa
 							requestAnimationFrame(() => {
 								requestAnimationFrame(() => {
 									enableScrollAnimation.value = true;
+									isRestoringScroll.value = false; // Mở khóa tính toán cuộn
 								});
 							});
+
+							// Mở khóa Refresher sau một khoảng delay để triệt tiêu quán tính cuộn
+							setTimeout(() => {
+								isRefresherLocked.value = false;
+							}, 800);
+
 						}).exec();
 					}, 50);
 				});
+			}).catch(() => {
+				isRestoringScroll.value = false;
+				isRefresherLocked.value = false;
 			});
 		}).exec();
 	};
+
 
 	const showCustomActionSheet = ref(false);
 	const selectedItemForAction = ref<any>(null);
@@ -453,10 +487,58 @@
 		}
 	};
 	const handleJumpToPage = (page : number) => {
-		jumpToPage(page);
 		isPaginationExpanded.value = false;
-		scrollTop.value = lastScrollTop.value;
-		setTimeout(() => { scrollTop.value = 0; }, 10);
+		
+		jumpToPage(page).then((jumpToIndex) => {
+			if (jumpToIndex === null) return;
+			
+			// Tính toán vị trí scroll dựa trên index
+			nextTick(() => {
+				setTimeout(() => {
+					// Lấy chiều cao trung bình của item (ước lượng hoặc tính toán)
+					// Cách tốt nhất là query DOM để lấy vị trí của item thứ jumpToIndex
+					if (jumpToIndex === 0) {
+						scrollTop.value = lastScrollTop.value;
+						setTimeout(() => { scrollTop.value = 0; }, 10);
+					} else {
+						// Logic cuộn đến item cụ thể
+						// Vì jumpToIndex là index trong mảng todos hiện tại
+						// Ta cần cuộn sao cho item này nằm ở đầu màn hình
+						
+						// Tạm thời dùng ước lượng chiều cao item ~120px nếu không query được
+						// Hoặc tốt hơn là dùng scroll-into-view nếu có ID
+						// Nhưng ở đây ta dùng scrollTop 
+						
+						const query = uni.createSelectorQuery().in(instance);
+						query.selectAll('.card-item').boundingClientRect(rects => {
+							if (Array.isArray(rects) && rects.length > jumpToIndex) {
+								// Lấy top của item mục tiêu so với list-view
+								// Lưu ý: boundingClientRect trả về vị trí so với viewport
+								// Cần cộng thêm scrollTop hiện tại để ra vị trí tuyệt đối trong scroll-view context
+								// Nhưng ở đây ta cần tính offset từ đầu list
+								
+								// Cách đơn giản hơn: Tính tổng chiều cao các item trước đó
+								let offset = 0;
+								for(let i=0; i<jumpToIndex; i++) {
+									offset += rects[i].height + 15; // 15 là margin-bottom
+								}
+								// Cộng thêm padding top của list nếu có
+								offset += 15; 
+								
+								scrollTop.value = lastScrollTop.value;
+								setTimeout(() => { scrollTop.value = offset; }, 10);
+							} else {
+								// Fallback nếu không đo được
+								const estHeight = 135; // 120 height + 15 margin
+								const offset = jumpToIndex * estHeight;
+								scrollTop.value = lastScrollTop.value;
+								setTimeout(() => { scrollTop.value = offset; }, 10);
+							}
+						}).exec();
+					}
+				}, 100);
+			});
+		});
 	};
 	const onScroll = (e : any) => {
 		lastScrollTop.value = e.detail.scrollTop;
@@ -518,10 +600,11 @@
 		font-size: 16px;
 	}
 
-	.loading-state.small {
+	.loading-state.load-prev {
 		height: auto;
-		padding: 5px;
-		font-size: 12px;
+		padding: 10px 0;
+		font-size: 13px;
+		flex-direction: row;
 	}
 
 	.container {

@@ -11,7 +11,7 @@
 		<view class="content-body">
 			<view class="flat-item title-input-group">
 				<view class="item-left">
-					<image src="https://img.icons8.com/ios/50/666666/edit--v1.png" class="item-icon"></image>
+					<image src="/static/edit-title-create-todo.png" class="item-icon"></image>
 				</view>
 				<textarea class="item-input title-textarea" v-model="form.name"
 					:placeholder="$t('todo.enter_task_name')" maxlength="256" auto-height
@@ -28,7 +28,7 @@
 
 			<view class="flat-item customer-item" @click="openCustomerPopup">
 			    <view class="item-left">
-			        <image src="https://img.icons8.com/ios/50/666666/price-tag.png" class="item-icon"></image>
+			        <image src="/static/price-tag-create-todo.png" class="item-icon"></image>
 			    </view>
 			    <view class="input-trigger" :class="{ 'placeholder': !form.customer }">
 			        {{ form.customer || $t('todo.select_customer') }}
@@ -42,7 +42,7 @@
 
 			<view class="flat-item">
 				<view class="item-left">
-					<image src="https://img.icons8.com/ios/50/666666/internet.png" class="item-icon"></image>
+					<image src="/static/internet.png" class="item-icon"></image>
 				</view>
 
 				<AppPicker :range="sourceOptions" :value="sourceIndex > -1 ? sourceIndex : 0" @change="onSourceChange"
@@ -57,7 +57,7 @@
 
 			<view class="flat-item">
 				<view class="item-left">
-					<image src="https://img.icons8.com/ios/50/666666/user.png" class="item-icon"></image>
+					<image src="/static/user.png" class="item-icon"></image>
 				</view>
 
 				<AppPicker :range="memberOptions" :value="memberIndex" @change="onMemberChange"
