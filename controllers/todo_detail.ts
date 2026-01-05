@@ -17,30 +17,41 @@ import { TODO_STATUS } from '@/utils/constants';
 import { showSuccess, showError, showInfo } from '@/utils/toast';
 import { extractLinksAndCleanHtml } from '@/utils/linkHelper';
 import { useI18n } from 'vue-i18n';
+
+const formatFullDateTime = (timestamp: number): string => {
+	if (!timestamp || timestamp === -1 || timestamp === 0) return '';
+	const date = new Date(timestamp);
+	const d = date.getDate().toString().padStart(2, '0');
+	const m = (date.getMonth() + 1).toString().padStart(2, '0');
+	const y = date.getFullYear();
+	const h = date.getHours().toString().padStart(2, '0');
+	const min = date.getMinutes().toString().padStart(2, '0');
+	return `${d}/${m}/${y} ${h}:${min}`;
+};
 interface CommentItem {
-	id : number;
-	senderId : string | number;
-	senderName : string;
-	senderAvatarChar : string;
-	senderAvatarColor : string;
-	message : string;
-	files : string;
-	timeDisplay : string;
-	actionText : string;
-	isEdited : boolean;
-	type : string;
-	reactions : any[];
-	children : CommentItem[];
-	rootParentId ?: number;
-	isMe : boolean;
+	id: number;
+	senderId: string | number;
+	senderName: string;
+	senderAvatarChar: string;
+	senderAvatarColor: string;
+	message: string;
+	files: string;
+	timeDisplay: string;
+	actionText: string;
+	isEdited: boolean;
+	type: string;
+	reactions: any[];
+	children: CommentItem[];
+	rootParentId?: number;
+	isMe: boolean;
 }
 
 interface HistoryItem {
-	id : number;
-	timeStr : string;
-	content : string;
-	actorName : string;
-	originalType : string;
+	id: number;
+	timeStr: string;
+	content: string;
+	actorName: string;
+	originalType: string;
 }
 export const useTodoDetailController = () => {
 	const { t } = useI18n();
@@ -88,7 +99,7 @@ export const useTodoDetailController = () => {
 	const toggleHistory = () => {
 		isHistoryOpen.value = !isHistoryOpen.value;
 	};
-	const convertDateTimeToTimestamp = (dateTimeStr : string) : number => {
+	const convertDateTimeToTimestamp = (dateTimeStr: string): number => {
 		if (!dateTimeStr) return 0;
 		try {
 			const safeStr = dateTimeStr.replace(/-/g, '/');
@@ -103,7 +114,7 @@ export const useTodoDetailController = () => {
 		if (!form.value.raw) return true;
 		return form.value.raw.status === 'DONE';
 	});
-	const onDateUpdate = async (event : { field : string, value : string }) => {
+	const onDateUpdate = async (event: { field: string, value: string }) => {
 		if (isDone.value) return;
 		if (!form.value.raw) return;
 		let tempDueDate = form.value.dueDate;
@@ -155,13 +166,16 @@ export const useTodoDetailController = () => {
 				if (event.field === 'dueDate') {
 					form.value.raw.dueDate = payload.dueDate;
 					form.value.dueDate = event.value;
+					if (form.value.raw) form.value.raw.dueDateFormatted = formatFullDateTime(payload.dueDate);
 				} else {
 					form.value.raw.notificationReceivedAt = payload.notificationReceivedAt;
 					form.value.notifyAt = event.value;
+					if (form.value.raw) form.value.raw.notifyAtFormatted = formatFullDateTime(payload.notificationReceivedAt);
 				}
 
 				if (form.value.customerCode) await fetchHistoryLog(form.value.customerCode);
 				await fetchComments(form.value.id);
+				uni.$emit('refresh-todo-list', { type: 'update', data: form.value.raw });
 			}
 		} catch (error) {
 			console.error("Lỗi cập nhật ngày:", error);
@@ -175,7 +189,7 @@ export const useTodoDetailController = () => {
 			isLoading.value = false;
 		}
 	};
-	const isHtmlContentEmpty = (html : string) => {
+	const isHtmlContentEmpty = (html: string) => {
 		if (!html) return true;
 		if (html.includes('<img') || html.includes('<iframe')) {
 			return false;
@@ -184,7 +198,7 @@ export const useTodoDetailController = () => {
 		textOnly = textOnly.replace(/<[^>]+>/g, '');
 		return textOnly.trim().length === 0;
 	};
-	const processCommentInput = async (htmlContent : string) : Promise<{ cleanMessage : string, fileUrl : string }> => {
+	const processCommentInput = async (htmlContent: string): Promise<{ cleanMessage: string, fileUrl: string }> => {
 		if (!htmlContent) return { cleanMessage: '', fileUrl: '' };
 
 		const imgRegex = /<img[^>]+src="([^">]+)"[^>]*>/g;
@@ -192,7 +206,7 @@ export const useTodoDetailController = () => {
 		let fileUrl = '';
 		let cleanMessage = htmlContent;
 
-		const uploadPromises : Promise<string>[] = [];
+		const uploadPromises: Promise<string>[] = [];
 
 		while ((match = imgRegex.exec(htmlContent)) !== null) {
 			const fullImgTag = match[0];
@@ -226,14 +240,14 @@ export const useTodoDetailController = () => {
 
 		return { cleanMessage, fileUrl };
 	};
-	const processDescriptionImages = async (htmlContent : string) : Promise<{ newContent : string, fileUrls : string[] }> => {
+	const processDescriptionImages = async (htmlContent: string): Promise<{ newContent: string, fileUrls: string[] }> => {
 		if (!htmlContent) return { newContent: '', fileUrls: [] };
 
 		const imgRegex = /<img[^>]+src="([^">]+)"/g;
 		let match;
-		const promises : Promise<any>[] = [];
-		const replacements : { oldSrc : string, newSrc : string }[] = [];
-		const uploadedUrls : string[] = [];
+		const promises: Promise<any>[] = [];
+		const replacements: { oldSrc: string, newSrc: string }[] = [];
+		const uploadedUrls: string[] = [];
 
 		while ((match = imgRegex.exec(htmlContent)) !== null) {
 			const src = match[1];
@@ -302,6 +316,7 @@ export const useTodoDetailController = () => {
 					form.value.raw.files = filesString;
 				}
 				await fetchComments(form.value.id);
+				uni.$emit('refresh-todo-list', { type: 'update', data: form.value.raw });
 			}
 		} catch (error) {
 			console.error("Lỗi cập nhật công việc:", error);
@@ -352,6 +367,7 @@ export const useTodoDetailController = () => {
 					await fetchHistoryLog(form.value.customerCode);
 				}
 				await fetchComments(form.value.id);
+				uni.$emit('refresh-todo-list', { type: 'update', data: form.value.raw });
 			}
 		} catch (error) {
 			console.error("Lỗi cập nhật tiêu đề:", error);
@@ -362,7 +378,7 @@ export const useTodoDetailController = () => {
 			isLoading.value = false;
 		}
 	};
-	const onRequestReply = async (item : any) => {
+	const onRequestReply = async (item: any) => {
 		isEditingComment.value = false;
 		editingCommentData.value = null;
 		newCommentText.value = '';
@@ -476,7 +492,7 @@ export const useTodoDetailController = () => {
 		newCommentText.value = '';
 	};
 
-	const onToggleEmojiPicker = (commentItem : any) => {
+	const onToggleEmojiPicker = (commentItem: any) => {
 		currentReactingComment.value = commentItem;
 		isEmojiPickerOpen.value = true;
 	};
@@ -486,7 +502,7 @@ export const useTodoDetailController = () => {
 		currentReactingComment.value = null;
 	};
 
-	const selectEmoji = async (emoji : string) => {
+	const selectEmoji = async (emoji: string) => {
 		if (!currentReactingComment.value) return;
 
 		const messageId = currentReactingComment.value.id;
@@ -509,7 +525,7 @@ export const useTodoDetailController = () => {
 
 			if (res) {
 
-				let foundComment : any = null;
+				let foundComment: any = null;
 				const parentIdx = comments.value.findIndex(c => c.id === messageId);
 				if (parentIdx !== -1) {
 					foundComment = comments.value[parentIdx];
@@ -530,7 +546,7 @@ export const useTodoDetailController = () => {
 
 
 					const existingReactionIndex = foundComment.reactions.findIndex(
-						(r : any) => r.senderId === senderId
+						(r: any) => r.senderId === senderId
 					);
 
 					if (existingReactionIndex !== -1) {
@@ -562,9 +578,9 @@ export const useTodoDetailController = () => {
 		}
 	};
 	const editingCommentData = ref<{
-		id : number;
-		todoId : number;
-		senderId : string;
+		id: number;
+		todoId: number;
+		senderId: string;
 	} | null>(null);
 	const historyFilterIndex = ref(0);
 
@@ -617,7 +633,7 @@ export const useTodoDetailController = () => {
 		return options;
 	});
 	const statusLabels = computed(() => dynamicStatusOptions.value.map(opt => opt.label));
-	const onRequestEditComment = async (commentId : number) => {
+	const onRequestEditComment = async (commentId: number) => {
 		const todoId = form.value.id;
 		if (!todoId) return;
 		isReplying.value = false;
@@ -736,7 +752,7 @@ export const useTodoDetailController = () => {
 		newCommentText.value = '';
 		editingMemberName.value = '';
 	};
-	const onRequestDeleteComment = (commentId : number) => {
+	const onRequestDeleteComment = (commentId: number) => {
 		commentToDeleteId.value = commentId;
 		isConfirmDeleteCommentOpen.value = true;
 	};
@@ -821,7 +837,7 @@ export const useTodoDetailController = () => {
 			isSubmittingComment.value = false;
 		}
 	};
-	onLoad(async (options : any) => {
+	onLoad(async (options: any) => {
 		await fetchMembers();
 		if (options && options.id) {
 			fetchDetail(options.id);
@@ -862,7 +878,7 @@ export const useTodoDetailController = () => {
 		console.log('Refreshing detail...');
 		reloadDetail();
 	});
-	const fetchDetail = async (id : string | number) => {
+	const fetchDetail = async (id: string | number) => {
 		if (!form.value.title) {
 			isLoading.value = true;
 		} else {
@@ -906,7 +922,7 @@ export const useTodoDetailController = () => {
 			uni.hideNavigationBarLoading();
 		}
 	};
-	const processCommentData = (item : any) : CommentItem => {
+	const processCommentData = (item: any): CommentItem => {
 		let senderName = t('todo.user_hidden');
 		let avatarChar = '?';
 		let avatarColor = '#e3f2fd';
@@ -981,17 +997,17 @@ export const useTodoDetailController = () => {
 		};
 	};
 
-	const fetchComments = async (todoId : string | number) => {
+	const fetchComments = async (todoId: string | number) => {
 		isLoadingComments.value = true;
 		try {
 			const currentKeySearch = commentFilterValues[commentFilterIndex.value];
 			const rawData = await getTodoMessages(todoId, currentKeySearch);
 
 			if (Array.isArray(rawData)) {
-				comments.value = rawData.map((parent : any) => {
+				comments.value = rawData.map((parent: any) => {
 					const parentComment = processCommentData(parent);
 					if (parent.replies && parent.replies.length > 0) {
-						parentComment.children = parent.replies.map((child : any) => {
+						parentComment.children = parent.replies.map((child: any) => {
 							const childComment = processCommentData(child);
 							childComment.rootParentId = parent.id;
 							return childComment;
@@ -1008,7 +1024,7 @@ export const useTodoDetailController = () => {
 			isLoadingComments.value = false;
 		}
 	};
-	const onCommentFilterChange = (e : any) => {
+	const onCommentFilterChange = (e: any) => {
 		const newIndex = e.detail.value;
 
 		if (commentFilterIndex.value === newIndex) return;
@@ -1021,7 +1037,7 @@ export const useTodoDetailController = () => {
 		}
 	};
 
-	const fetchCustomerInfo = async (customerUid : string) => {
+	const fetchCustomerInfo = async (customerUid: string) => {
 		isLoadingCustomer.value = true;
 		try {
 
@@ -1033,9 +1049,9 @@ export const useTodoDetailController = () => {
 
 			const fields = res.fields || res.data?.fields || [];
 
-			const nameField = fields.find((f : any) => f.code === 'name');
-			const phoneField = fields.find((f : any) => f.code === 'phone');
-			const managerField = fields.find((f : any) => f.code === 'member_no');
+			const nameField = fields.find((f: any) => f.code === 'name');
+			const phoneField = fields.find((f: any) => f.code === 'phone');
+			const managerField = fields.find((f: any) => f.code === 'member_no');
 
 
 			if (nameField) {
@@ -1066,7 +1082,7 @@ export const useTodoDetailController = () => {
 			isLoadingCustomer.value = false;
 		}
 	};
-	const fetchHistoryLog = async (customerUid : string) => {
+	const fetchHistoryLog = async (customerUid: string) => {
 		isLoadingHistory.value = true;
 		try {
 			const currentType = historyFilterValues[historyFilterIndex.value];
@@ -1080,7 +1096,7 @@ export const useTodoDetailController = () => {
 			const rawHistory = await getCrmActionTimeline(crmToken, customerUid, currentType);
 
 			if (Array.isArray(rawHistory)) {
-				historyList.value = rawHistory.map((item : any) => {
+				historyList.value = rawHistory.map((item: any) => {
 
 					const date = new Date(item.createAt);
 					const day = date.getDate().toString().padStart(2, '0');
@@ -1125,7 +1141,7 @@ export const useTodoDetailController = () => {
 			isLoadingHistory.value = false;
 		}
 	};
-	const onHistoryFilterChange = (e : any) => {
+	const onHistoryFilterChange = (e: any) => {
 
 		historyFilterIndex.value = e.detail.value;
 
@@ -1135,7 +1151,7 @@ export const useTodoDetailController = () => {
 		}
 	};
 
-	const onStatusChange = async (e : any) => {
+	const onStatusChange = async (e: any) => {
 
 		const newIndex = parseInt(e.detail.value);
 		const selectedOption = dynamicStatusOptions.value[newIndex];
@@ -1181,6 +1197,7 @@ export const useTodoDetailController = () => {
 
 				if (form.value.customerCode) await fetchHistoryLog(form.value.customerCode);
 				await fetchComments(form.value.id);
+				uni.$emit('refresh-todo-list', { type: 'update', data: form.value.raw });
 			}
 		} catch (error) {
 			console.error("Lỗi cập nhật trạng thái:", error);
@@ -1191,8 +1208,8 @@ export const useTodoDetailController = () => {
 
 		}
 	};
-	const onSourceChange = (e : any) => { form.value.sourceIndex = e.detail.value; };
-	const onAssigneeChange = async (e : any) => {
+	const onSourceChange = (e: any) => { form.value.sourceIndex = e.detail.value; };
+	const onAssigneeChange = async (e: any) => {
 
 		const idx = parseInt(e.detail.value);
 
@@ -1243,6 +1260,7 @@ export const useTodoDetailController = () => {
 				}
 
 				await fetchComments(form.value.id);
+				uni.$emit('refresh-todo-list', { type: 'update', data: form.value.raw });
 			}
 		} catch (error) {
 			console.error("Lỗi cập nhật người giao:", error);

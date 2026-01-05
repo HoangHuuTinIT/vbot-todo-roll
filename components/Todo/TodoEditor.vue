@@ -554,6 +554,9 @@
 	const confirmLink = () => {
 		if (linkUrl.value) {
 			editorCtx.value.format('link', linkUrl.value);
+			setTimeout(() => {
+				triggerUpdate();
+			}, 100);
 		}
 		showLinkModal.value = false;
 	};

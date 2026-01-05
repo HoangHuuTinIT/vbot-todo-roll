@@ -13,7 +13,7 @@ import { getMinuteTimestamp, validateNotifyAndDueDate } from '@/utils/dateUtils'
 export const useCreateTodoController = () => {
 	const { t } = useI18n();
 	const authStore = useAuthStore();
-	const pad = (n : number) => n.toString().padStart(2, '0');
+	const pad = (n: number) => n.toString().padStart(2, '0');
 	const getCurrentDateTimeISO = () => {
 		const d = new Date();
 		const y = d.getFullYear();
@@ -23,7 +23,7 @@ export const useCreateTodoController = () => {
 		const min = pad(d.getMinutes());
 		return `${y}-${m}-${day} ${h}:${min}:00`;
 	};
-	const getDateTimestamp = (dateStr : string) => {
+	const getDateTimestamp = (dateStr: string) => {
 		if (!dateStr) return 0;
 		return new Date(dateStr.replace(/-/g, '/')).getTime();
 	};
@@ -45,7 +45,7 @@ export const useCreateTodoController = () => {
 		dueDate: '',
 		notifyAt: ''
 	});
-	const timestampToDateString = (ts : number) => {
+	const timestampToDateString = (ts: number) => {
 		const d = new Date(ts);
 		const y = d.getFullYear();
 		const m = pad(d.getMonth() + 1);
@@ -74,7 +74,7 @@ export const useCreateTodoController = () => {
 
 	const showCustomerModal = ref(false);
 	const customerToken = ref('');
-	const onSourceChange = (e : any) => {
+	const onSourceChange = (e: any) => {
 		sourceIndex.value = parseInt(e.detail.value);
 	};
 	const fetchMembers = async () => {
@@ -93,10 +93,10 @@ export const useCreateTodoController = () => {
 			fetchCustomers({});
 		}
 	};
-	const onCustomerFilter = (filterParams : any) => {
+	const onCustomerFilter = (filterParams: any) => {
 		fetchCustomers(filterParams);
 	};
-	const onCustomerSelect = (customer : any) => {
+	const onCustomerSelect = (customer: any) => {
 		form.value.customer = `${customer.name} - ${customer.phone}`;
 		form.value.customerUid = customer.uid;
 		if (customer.managerUid) {
@@ -113,7 +113,7 @@ export const useCreateTodoController = () => {
 
 		showCustomerModal.value = false;
 	};
-	const onMemberChange = (e : any) => {
+	const onMemberChange = (e: any) => {
 		const index = e.detail.value;
 		selectedMemberIndex.value = index;
 		const selectedMember = memberList.value[index];
@@ -130,14 +130,14 @@ export const useCreateTodoController = () => {
 	});
 
 	const goBack = () => uni.navigateBack();
-	const processDescriptionImages = async (htmlContent : string) : Promise<{ newContent : string, fileUrls : string[] }> => {
+	const processDescriptionImages = async (htmlContent: string): Promise<{ newContent: string, fileUrls: string[] }> => {
 		if (!htmlContent) return { newContent: '', fileUrls: [] };
 
 		const imgRegex = /<img[^>]+src="([^">]+)"/g;
 		let match;
-		const promises : Promise<any>[] = [];
-		const replacements : { oldSrc : string, newSrc : string }[] = [];
-		const uploadedUrls : string[] = [];
+		const promises: Promise<any>[] = [];
+		const replacements: { oldSrc: string, newSrc: string }[] = [];
+		const uploadedUrls: string[] = [];
 
 		while ((match = imgRegex.exec(htmlContent)) !== null) {
 			const src = match[1];
@@ -190,20 +190,21 @@ export const useCreateTodoController = () => {
 			form.value.desc = newContent;
 
 			const payload = buildCreateTodoPayload(form.value, {
-				projectCode: authStore.projectCode, 
+				projectCode: authStore.projectCode,
 				uid: authStore.uid,
 				link: selectedLink,
 				uploadedFiles: fileUrls.length > 0 ? fileUrls[0] : ''
 			});
-		
+
 			console.log("Payload Submit:", payload);
 			await createTodo(payload);
 
 			hideLoading();
 			showSuccess(t('todo.create_success'));
+			uni.$emit('refresh-todo-list', { type: 'create' });
 			setTimeout(() => { uni.navigateBack(); }, 1500);
 
-		} catch (error : any) {
+		} catch (error: any) {
 			hideLoading();
 			console.error("Create Error:", error);
 			const errorMsg = error?.message || (typeof error === 'string' ? error : t('common.failed'));

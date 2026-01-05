@@ -1,5 +1,5 @@
 // controllers/list_todo.ts
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import { getTodos, getTodoCount, deleteTodo, updateTodo } from '@/api/todo';
 import { useAuthStore } from '@/stores/auth';
@@ -492,6 +492,28 @@ export const useListTodoController = () => {
 			getTodoList('init');
 			fetchCustomers({});
 		}
+	});
+
+	const handleRefreshEvent = (event: { type: string, data?: TodoItem }) => {
+		console.log('[ListTodo] Received refresh event:', event);
+		if (event.type === 'create') {
+			resetPagination();
+			getTodoList('init');
+		} else if (event.type === 'update' && event.data) {
+			const index = todos.value.findIndex(item => item.id === event.data?.id);
+			if (index !== -1 && event.data) {
+				// Update with new data while preserving existing structure if any
+				todos.value[index] = { ...todos.value[index], ...event.data };
+			}
+		}
+	};
+
+	onMounted(() => {
+		uni.$on('refresh-todo-list', handleRefreshEvent);
+	});
+
+	onUnmounted(() => {
+		uni.$off('refresh-todo-list', handleRefreshEvent);
 	});
 
 	const goToDetail = (item: TodoItem) => {
