@@ -4,6 +4,8 @@
 	import { useSocketStore } from '@/stores/socket';
 	// 1. IMPORT HÀM ĐỔI NGÔN NGỮ
 	import { changeLanguage } from '@/utils/language';
+	// 2. IMPORT ANDROID BRIDGE CHO WEBVIEW
+	import { getAuthFromAndroid, isAndroidWebView } from '@/utils/androidBridge';
 
 	const handleNativeData = async (eventName : string, options : any = null) => {
 		console.log(`[${eventName}] Bắt đầu kiểm tra dữ liệu từ Native...`);
@@ -12,25 +14,37 @@
 
 		let nativeData = null;
 
-		// --- (Giữ nguyên logic lấy nativeData cũ của bạn) ---
-		if (options && options.referrerInfo && options.referrerInfo.extraData) {
-			console.log("-> Tìm thấy dữ liệu trong options.referrerInfo");
-			nativeData = options.referrerInfo.extraData;
-		}
-		else if (typeof plus !== 'undefined' && plus.runtime && plus.runtime.arguments) {
-			console.log("-> Tìm thấy dữ liệu trong plus.runtime.arguments");
-			const args = plus.runtime.arguments;
-			try {
-				nativeData = (typeof args === 'string' && args.startsWith('{')) ? JSON.parse(args) : args;
-			} catch (e) {
-				console.error("Lỗi parse arguments:", e);
-				if (typeof args === 'object') nativeData = args;
+		// --- PRIORITY 1: JavaScript Interface (WebView mode) ---
+		if (isAndroidWebView()) {
+			console.log("-> 📱 WebView mode detected, trying JavaScript Interface...");
+			const androidAuth = getAuthFromAndroid();
+			if (androidAuth) {
+				console.log("-> ✅ Received auth data from JavaScript Interface");
+				nativeData = androidAuth;
 			}
 		}
-		else {
-			const launchOpts = uni.getLaunchOptionsSync();
-			if (launchOpts && launchOpts.extraData) {
-				nativeData = launchOpts.extraData;
+
+		// --- PRIORITY 2: Fallback to existing uni-app methods ---
+		if (!nativeData) {
+			if (options && options.referrerInfo && options.referrerInfo.extraData) {
+				console.log("-> Tìm thấy dữ liệu trong options.referrerInfo");
+				nativeData = options.referrerInfo.extraData;
+			}
+			else if (typeof plus !== 'undefined' && plus.runtime && plus.runtime.arguments) {
+				console.log("-> Tìm thấy dữ liệu trong plus.runtime.arguments");
+				const args = plus.runtime.arguments;
+				try {
+					nativeData = (typeof args === 'string' && args.startsWith('{')) ? JSON.parse(args) : args;
+				} catch (e) {
+					console.error("Lỗi parse arguments:", e);
+					if (typeof args === 'object') nativeData = args;
+				}
+			}
+			else {
+				const launchOpts = uni.getLaunchOptionsSync();
+				if (launchOpts && launchOpts.extraData) {
+					nativeData = launchOpts.extraData;
+				}
 			}
 		}
 		// -----------------------------------------------------
