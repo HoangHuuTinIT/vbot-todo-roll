@@ -54,7 +54,7 @@
 									<view class="card-row top-row">
 										<text class="card-title">#{{ item.code }} - {{ item.title }}</text>
 										<view class="action-btn" @click.stop="openCustomMenu(item)">
-											<text class="dots">•••</text>
+											<text class="dots">⋮</text>
 										</view>
 									</view>
 
@@ -991,11 +991,9 @@
 	}
 
 	.dots {
-		font-size: 18px;
+		font-size: 28px;
 		color: var(--text-hint);
 		font-weight: bold;
-		letter-spacing: 1px;
-		transform: rotate(90deg);
 	}
 
 	.card-info-row {
