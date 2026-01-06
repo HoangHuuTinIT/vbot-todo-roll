@@ -228,6 +228,9 @@
 						</view>
 					</view>
 				</view>
+				<view v-if="isLoadingMoreHistory" class="loading-more-container">
+					<text class="loading-more-text">{{ $t('common.loading') }}...</text>
+				</view>
 			</view>
 
 			<view style="height: 50px;"></view>
@@ -323,6 +326,7 @@
 		replyingMessagePreview,
 		isHistoryOpen,
 		toggleHistory, goBack, isDone,
+		isLoadingMoreHistory
 	} = useTodoDetailController();
 	const isCommentsOpen = ref(false);
 	const scrollTarget = ref('');
@@ -637,6 +641,18 @@
 		font-size: 14px;
 		color: var(--text-secondary);
 		line-height: 1.4;
+	}
+
+	.loading-more-container {
+		padding: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.loading-more-text {
+		font-size: 12px;
+		color: var(--text-hint);
 	}
 
 	.section-header-row {

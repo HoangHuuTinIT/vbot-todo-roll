@@ -1,9 +1,9 @@
 //controllers/todo_detail.ts
 import { ref, nextTick, computed } from 'vue';
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app';
+import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import { updateTodo, getTodoDetail, getTodoMessages, createTodoMessage, deleteTodoMessage, getTodoMessageDetail, updateTodoMessage, reactionTodoMessage, uploadTodoFile } from '@/api/todo';
 import { getAllMembers } from '@/api/project';
-import { getCrmCustomerDetail, getCrmActionTimeline } from '@/api/crm';
+import { getCrmCustomerDetail, getCrmActionTimeline, getCrmActionTimelineCount } from '@/api/crm';
 import { mapTodoDetailToForm, type TodoDetailForm } from '@/models/todo_detail';
 import { TIMELINE_TYPE_MAP } from '@/utils/constants';
 import { useAuthStore } from '@/stores/auth';
@@ -62,6 +62,10 @@ export const useTodoDetailController = () => {
 	const isLoadingHistory = ref(false);
 	const historyList = ref<HistoryItem[]>([]);
 	const isHistoryOpen = ref(false);
+	const historyPage = ref(1);
+	const historySize = ref(10);
+	const historyTotal = ref(0);
+	const isLoadingMoreHistory = ref(false);
 	const comments = ref<CommentItem[]>([]);
 	const isLoadingComments = ref(false);
 
@@ -878,6 +882,11 @@ export const useTodoDetailController = () => {
 		console.log('Refreshing detail...');
 		reloadDetail();
 	});
+
+	onReachBottom(() => {
+		loadMoreHistory();
+	});
+
 	const fetchDetail = async (id: string | number) => {
 		if (!form.value.title) {
 			isLoading.value = true;
@@ -1082,8 +1091,14 @@ export const useTodoDetailController = () => {
 			isLoadingCustomer.value = false;
 		}
 	};
-	const fetchHistoryLog = async (customerUid: string) => {
-		isLoadingHistory.value = true;
+	const fetchHistoryLog = async (customerUid: string, isLoadMore: boolean = false) => {
+		if (isLoadMore) {
+			isLoadingMoreHistory.value = true;
+		} else {
+			isLoadingHistory.value = true;
+			historyPage.value = 1;
+		}
+
 		try {
 			const currentType = historyFilterValues[historyFilterIndex.value];
 
@@ -1093,10 +1108,21 @@ export const useTodoDetailController = () => {
 				return;
 			}
 
-			const rawHistory = await getCrmActionTimeline(crmToken, customerUid, currentType);
+			if (!isLoadMore) {
+				const count = await getCrmActionTimelineCount(crmToken, customerUid, currentType);
+				historyTotal.value = count;
+			}
+
+			const rawHistory = await getCrmActionTimeline(
+				crmToken,
+				customerUid,
+				currentType,
+				historyPage.value,
+				historySize.value
+			);
 
 			if (Array.isArray(rawHistory)) {
-				historyList.value = rawHistory.map((item: any) => {
+				const mappedList = rawHistory.map((item: any) => {
 
 					const date = new Date(item.createAt);
 					const day = date.getDate().toString().padStart(2, '0');
@@ -1133,12 +1159,29 @@ export const useTodoDetailController = () => {
 						originalType: item.typeSub
 					};
 				});
+
+				if (isLoadMore) {
+					historyList.value = [...historyList.value, ...mappedList];
+				} else {
+					historyList.value = mappedList;
+				}
 			}
 
 		} catch (error) {
 			console.error("Lỗi lấy lịch sử:", error);
 		} finally {
 			isLoadingHistory.value = false;
+			isLoadingMoreHistory.value = false;
+		}
+	};
+
+	const loadMoreHistory = () => {
+		if (isLoadingHistory.value || isLoadingMoreHistory.value) return;
+		if (historyList.value.length >= historyTotal.value) return;
+
+		if (form.value.customerCode && isHistoryOpen.value) {
+			historyPage.value += 1;
+			fetchHistoryLog(form.value.customerCode, true);
 		}
 	};
 	const onHistoryFilterChange = (e: any) => {
@@ -1335,5 +1378,6 @@ export const useTodoDetailController = () => {
 		replyingMessagePreview,
 		isHistoryOpen,
 		toggleHistory, isDone,
+		loadMoreHistory, isLoadingMoreHistory
 	};
 };

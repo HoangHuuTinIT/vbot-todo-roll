@@ -4,11 +4,11 @@ import { useAuthStore } from '@/stores/auth';
 import { CRM_API_URL } from '@/utils/config';
 import type { ApiResponse } from '@/types/common';
 import type { TokenData } from '@/types/Auth';
-import type { 
-    CrmFieldDefinition, 
-    CrmCustomer, 
-    SearchCustomerPayload, 
-    CrmTimelineItem 
+import type {
+    CrmFieldDefinition,
+    CrmCustomer,
+    SearchCustomerPayload,
+    CrmTimelineItem
 } from '@/types/CRM';
 
 export const getCrmToken = (projectCode: string, uid: string): Promise<string> => {
@@ -25,7 +25,7 @@ export const getCrmToken = (projectCode: string, uid: string): Promise<string> =
         header: {
             'Authorization': `Bearer ${authStore.rootToken}`
         }
-    }).then(data => data.token); 
+    }).then(data => data.token);
 };
 
 export const getCrmFieldSearch = (crmToken: string): Promise<CrmFieldDefinition[]> => {
@@ -55,9 +55,27 @@ export const getCrmCustomerDetail = (crmToken: string, customerUid: string): Pro
     });
 };
 
-export const getCrmActionTimeline = (crmToken: string, customerUid: string, type: string = 'ALL'): Promise<CrmTimelineItem[]> => {
+export const getCrmActionTimeline = (
+    crmToken: string,
+    customerUid: string,
+    type: string = 'ALL',
+    page: number = 1,
+    size: number = 10
+): Promise<CrmTimelineItem[]> => {
     return request<CrmTimelineItem[]>({
-        url: `${CRM_API_URL}/ActionTimeline/getAll?from=-1&to=-1&customerUid=${customerUid}&type=${type}&page=1&size=10&memberUid=&projectCode=`,
+        url: `${CRM_API_URL}/ActionTimeline/getAll?from=-1&to=-1&customerUid=${customerUid}&type=${type}&page=${page}&size=${size}&memberUid=&projectCode=`,
+        method: 'GET',
+        header: { 'Authorization': `Bearer ${crmToken}` }
+    });
+};
+
+export const getCrmActionTimelineCount = (
+    crmToken: string,
+    customerUid: string,
+    type: string = 'ALL'
+): Promise<number> => {
+    return request<number>({
+        url: `${CRM_API_URL}/ActionTimeline/countAll?customerUid=${customerUid}&type=${type}`,
         method: 'GET',
         header: { 'Authorization': `Bearer ${crmToken}` }
     });
