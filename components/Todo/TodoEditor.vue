@@ -4,11 +4,10 @@
 			<editor :id="editorId" class="ql-container"
 				:placeholder="readOnly ? '' : (placeholder || $t('editor.placeholder'))" :read-only="readOnly"
 				show-img-size show-img-toolbar show-img-resize @ready="onEditorReady" @input="onInput"
-				@statuschange="onStatusChange">
+				@statuschange="onStatusChange" @touchstart="onEditorTouch">
 			</editor>
 
-			<view class="link-tooltip" v-if="showLinkTooltip" :style="tooltipStyle" @tap.stop
-				:class="{ 'is-fixed': tooltipPositionMode === 'fixed' }">
+			<view class="link-tooltip" v-if="showLinkTooltip" :style="tooltipStyle" @tap.stop>
 				<view class="tooltip-content">
 					<text class="tooltip-url">{{ currentActiveLink }}</text>
 				</view>
@@ -20,7 +19,7 @@
 					<view class="t-btn" @tap="handleTooltipEdit">{{ $t('common.edit_link') || 'Sửa' }}</view>
 				</view>
 
-				<view class="tooltip-arrow" :class="tooltipPositionMode" v-if="tooltipPositionMode !== 'fixed'"></view>
+				<view class="tooltip-arrow" :class="tooltipPositionMode"></view>
 			</view>
 		</view>
 
@@ -203,38 +202,46 @@
 	const showLinkTooltip = ref(false);
 	const currentActiveLink = ref('');
 	const tooltipTop = ref(0);
-	const tooltipLeft = ref(0);
+	const lastTouchY = ref(0);
+	const editorWrapperTop = ref(0);
 	const tooltipPositionMode = ref<'top' | 'bottom' | 'fixed'>('top');
 	const tooltipStyle = computed(() => {
-		if (tooltipPositionMode.value === 'fixed') {
-			return {};
-		}
 		return {
 			top: `${tooltipTop.value}px`,
 		};
 	});
 
-	const updateTooltipPosition = () => {
-		if (!editorCtx.value) return;
-
-		if (typeof editorCtx.value.getSelectionRect !== 'function') {
-			tooltipPositionMode.value = 'fixed';
-			return;
+	const onEditorTouch = (e: any) => {
+		if (e.touches && e.touches.length > 0) {
+			lastTouchY.value = e.touches[0].clientY;
 		}
+	};
 
-		editorCtx.value.getSelectionRect({
-			success: (rect : any) => {
-				if (rect && rect.bottom !== undefined) {
+	const updateTooltipPosition = () => {
+		// Lấy vị trí của editor-wrapper để tính toán vị trí tương đối
+		uni.createSelectorQuery().in(instance).select('.editor-wrapper').boundingClientRect((rect: any) => {
+			if (rect) {
+				editorWrapperTop.value = rect.top;
+				// Tính vị trí tooltip dựa trên vị trí touch
+				const relativeY = lastTouchY.value - rect.top;
+				// Hiển thị tooltip ngay trên vị trí touch (trừ đi chiều cao tooltip ~80px)
+				const tooltipHeight = 80;
+				let calculatedTop = relativeY - tooltipHeight;
+				// Đảm bảo tooltip không bị cắt ở trên
+				if (calculatedTop < 5) {
+					// Nếu không đủ chỗ ở trên, hiển thị ở dưới
+					calculatedTop = relativeY + 25;
 					tooltipPositionMode.value = 'bottom';
-					tooltipTop.value = rect.bottom + 8;
 				} else {
-					tooltipPositionMode.value = 'fixed';
+					tooltipPositionMode.value = 'top';
 				}
-			},
-			fail: () => {
-				tooltipPositionMode.value = 'fixed';
+				tooltipTop.value = calculatedTop;
+			} else {
+				// Fallback: hiển thị ở đầu
+				tooltipTop.value = 10;
+				tooltipPositionMode.value = 'top';
 			}
-		});
+		}).exec();
 	};
 
 	const handleTooltipOpen = () => {

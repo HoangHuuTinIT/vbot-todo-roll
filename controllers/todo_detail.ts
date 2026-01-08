@@ -17,6 +17,7 @@ import { TODO_STATUS } from '@/utils/constants';
 import { showSuccess, showError, showInfo } from '@/utils/toast';
 import { extractLinksAndCleanHtml } from '@/utils/linkHelper';
 import { useI18n } from 'vue-i18n';
+import { navigateBackWithViewTransition } from '@/utils/viewTransition';
 
 const formatFullDateTime = (timestamp: number): string => {
 	if (!timestamp || timestamp === -1 || timestamp === 0) return '';
@@ -1313,7 +1314,7 @@ export const useTodoDetailController = () => {
 			isLoading.value = false;
 		}
 	};
-	const goBack = () => { uni.navigateBack(); };
+	const goBack = () => { navigateBackWithViewTransition(); };
 	const saveTodo = () => {
 		console.log("Lưu:", form.value);
 		showSuccess(t('todo.msg_saved'));

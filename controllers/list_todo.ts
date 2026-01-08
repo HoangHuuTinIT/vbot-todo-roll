@@ -11,6 +11,7 @@ import { getAllMembers } from '@/api/project';
 import { showSuccess, showError } from '@/utils/toast';
 import { useCustomerFilter } from '@/composables/useCustomerFilter';
 import { useI18n } from 'vue-i18n';
+import { navigateWithViewTransition } from '@/utils/viewTransition';
 
 const useInfinitePagination = (defaultSize = 15) => {
 	const startPage = ref(1);
@@ -443,7 +444,7 @@ export const useListTodoController = () => {
 		});
 	};
 
-	const addNewTask = () => { uni.navigateTo({ url: '/pages/todo/create_todo' }); };
+	const addNewTask = () => { navigateWithViewTransition('/pages/todo/create_todo'); };
 	const openFilter = () => {
 		isFilterOpen.value = true;
 		fetchFilterMembers();
@@ -517,9 +518,7 @@ export const useListTodoController = () => {
 	});
 
 	const goToDetail = (item: TodoItem) => {
-		uni.navigateTo({
-			url: `/pages/todo/todo_detail?id=${item.id}`
-		});
+		navigateWithViewTransition(`/pages/todo/todo_detail?id=${item.id}`);
 	};
 
 	const updateActivePage = (index: number) => {

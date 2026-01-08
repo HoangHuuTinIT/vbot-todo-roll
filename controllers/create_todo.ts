@@ -10,6 +10,7 @@ import { showSuccess, showError, showInfo, showLoading, hideLoading } from '@/ut
 import { useCustomerFilter } from '@/composables/useCustomerFilter';
 import { useI18n } from 'vue-i18n';
 import { getMinuteTimestamp, validateNotifyAndDueDate } from '@/utils/dateUtils';
+import { navigateBackWithViewTransition } from '@/utils/viewTransition';
 export const useCreateTodoController = () => {
 	const { t } = useI18n();
 	const authStore = useAuthStore();
@@ -129,7 +130,7 @@ export const useCreateTodoController = () => {
 		return '';
 	});
 
-	const goBack = () => uni.navigateBack();
+	const goBack = () => navigateBackWithViewTransition();
 	const processDescriptionImages = async (htmlContent: string): Promise<{ newContent: string, fileUrls: string[] }> => {
 		if (!htmlContent) return { newContent: '', fileUrls: [] };
 
@@ -202,7 +203,7 @@ export const useCreateTodoController = () => {
 			hideLoading();
 			showSuccess(t('todo.create_success'));
 			uni.$emit('refresh-todo-list', { type: 'create' });
-			setTimeout(() => { uni.navigateBack(); }, 1500);
+			setTimeout(() => { navigateBackWithViewTransition(); }, 1500);
 
 		} catch (error: any) {
 			hideLoading();

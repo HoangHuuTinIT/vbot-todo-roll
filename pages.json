@@ -1,18 +1,26 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
 			"path": "pages/todo/list_todo",
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"app-plus": {
+					"animationType": "slide-in-right",
+					"animationDuration": 300
+				}
 			}
 		},
 		{
 			"path": "pages/todo/create_todo",
 			"style": {
 				"navigationBarTitleText": "uni-app",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"app-plus": {
+					"animationType": "slide-in-right",
+					"animationDuration": 300
+				}
 			}
 		},
 		{
@@ -20,7 +28,11 @@
 			"style": {
 				"navigationBarTitleText": "uni-app",
 				"enablePullDownRefresh": true,
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"app-plus": {
+					"animationType": "slide-in-right",
+					"animationDuration": 300
+				}
 			}
 		}
 	],
@@ -30,7 +42,11 @@
 		"navigationBarBackgroundColor": "@navBgColor",
 		"backgroundColor": "@navBgColor",
 		"rpxCalcMaxDeviceWidth": 960,
-		"usingComponents": true
+		"usingComponents": true,
+		"app-plus": {
+			"animationType": "slide-in-right",
+			"animationDuration": 300
+		}
 	},
 	"uniIdRouter": {}
 }

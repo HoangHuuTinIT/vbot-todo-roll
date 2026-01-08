@@ -17,10 +17,7 @@
 					:placeholder="$t('todo.enter_task_name')" maxlength="256" auto-height
 					placeholder-class="input-placeholder" />
 				<text class="char-count">
-					{{ $t('todo.char_count')
-			        .replace('{current}', String(form.name ? form.name.length : 0))
-			        .replace('{max}', '256') 
-			    }}
+					{{ $t('todo.char_count', { current: form.name ? form.name.length : 0, max: 256 }) }}
 				</text>
 			</view>
 

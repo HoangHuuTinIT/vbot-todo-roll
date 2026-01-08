@@ -260,7 +260,7 @@
 			@select="onCustomerSelect" @filter="onFilterCustomerInModal" @loadMore="loadMoreCustomers" />
 
 		<ConfirmModal v-model:visible="isConfirmDeleteOpen" :title="$t('common.notification')"
-			:message="itemToDelete ? $t('todo.confirm_delete_msg').replace('{title}', itemToDelete.title) : ''"
+			:message="itemToDelete ? $t('todo.confirm_delete_msg', { title: itemToDelete.title }) : ''"
 			confirm-type="danger" :cancel-label="$t('common.cancel')" :confirm-label="$t('common.delete')"
 			@confirm="confirmDelete" @cancel="cancelDelete" />
 
