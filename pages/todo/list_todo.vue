@@ -316,7 +316,12 @@
 			plus.runtime.quit();
 			/* #endif */
 			/* #ifndef APP-PLUS */
-			history.back();
+			// Check if running in Android WebView with our interface
+			if (typeof (window as any).Android !== 'undefined' && (window as any).Android.closeMiniApp) {
+				(window as any).Android.closeMiniApp();
+			} else {
+				history.back();
+			}
 			/* #endif */
 		}
 	};
