@@ -609,6 +609,9 @@
 		height: 100vh;
 		background-color: var(--bg-page);
 		overflow: hidden;
+		/* Edge-to-edge display */
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 
 	.header {
@@ -685,7 +688,7 @@
 		flex-shrink: 0;
 		background-color: var(--bg-surface);
 		padding: 10px 15px;
-		padding-bottom: calc(10px + env(safe-area-inset-bottom));
+		padding-bottom: calc(10px + var(--safe-area-inset-bottom, 0px));
 		border-top: 1px solid var(--border-color);
 		box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 		display: flex;

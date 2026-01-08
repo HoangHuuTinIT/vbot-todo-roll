@@ -373,6 +373,8 @@
 		display: flex;
 		flex-direction: column;
 		background-color: var(--bg-page);
+		/* Edge-to-edge display - ensure bottom content has safe area spacing */
+		padding-bottom: var(--safe-area-inset-bottom, 0px);
 	}
 
 	.detail-body {
@@ -388,7 +390,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 10px;
-		padding-top: var(--status-bar-height);
+		padding-top: calc(var(--status-bar-height, 20px) + var(--safe-area-inset-top, 0px));
 		border-bottom: 1px solid var(--border-color);
 		position: sticky;
 		top: 0;

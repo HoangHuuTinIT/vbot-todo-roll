@@ -69,7 +69,7 @@
 
 			<view v-if="!insert && !range && hasTime" class="uni-date-changed uni-calendar--fixed-top"
 				style="padding: 0 80px;">
-				<view class="uni-date-changed--time-date">{{tempSingleDate ? tempSingleDate : selectDateText}}</view>
+				<view class="uni-date-changed--time-date">{{tempSingleDate ? formatDateDisplay(tempSingleDate) : selectDateText}}</view>
 				<time-picker type="time" :start="timepickerStartTime" :end="timepickerEndTime" v-model="time"
 					:disabled="!tempSingleDate" :border="false" :hide-second="hideSecond" class="time-picker-style">
 				</time-picker>
@@ -77,7 +77,7 @@
 
 			<view v-if="!insert && range && hasTime" class="uni-date-changed uni-calendar--fixed-top">
 				<view class="uni-date-changed--time-start">
-					<view class="uni-date-changed--time-date">{{tempRange.before ? tempRange.before : startDateText}}
+					<view class="uni-date-changed--time-date">{{tempRange.before ? formatDateDisplay(tempRange.before) : startDateText}}
 					</view>
 					<time-picker type="time" :start="timepickerStartTime" v-model="timeRange.startTime" :border="false"
 						:hide-second="hideSecond" :disabled="!tempRange.before" class="time-picker-style">
@@ -87,7 +87,7 @@
 					<uni-icons type="arrowthinright" color="#999"></uni-icons>
 				</view>
 				<view class="uni-date-changed--time-end">
-					<view class="uni-date-changed--time-date">{{tempRange.after ? tempRange.after : endDateText}}</view>
+					<view class="uni-date-changed--time-date">{{tempRange.after ? formatDateDisplay(tempRange.after) : endDateText}}</view>
 					<time-picker type="time" :end="timepickerEndTime" v-model="timeRange.endTime" :border="false"
 						:hide-second="hideSecond" :disabled="!tempRange.after" class="time-picker-style">
 					</time-picker>
@@ -433,6 +433,17 @@
 			this.init(this.date)
 		},
 		methods: {
+			/**
+			 * Format date from YYYY-MM-DD to DD/MM/YYYY
+			 * @param {String} dateStr - Date string in YYYY-MM-DD format
+			 * @returns {String} - Date string in DD/MM/YYYY format
+			 */
+			formatDateDisplay(dateStr) {
+				if (!dateStr) return '';
+				const parts = dateStr.split('-');
+				if (parts.length !== 3) return dateStr;
+				return `${parts[2]}/${parts[1]}/${parts[0]}`;
+			},
 			bindMultiPickerChange(e) {
 				const [yearIndex, monthIndex] = e.detail.value;
 				const year = this.pickerYears[yearIndex];

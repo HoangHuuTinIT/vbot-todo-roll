@@ -1,5 +1,22 @@
 /*common/theme.scss */
 
+/* 0. Safe Area Insets for Edge-to-Edge Display */
+:root,
+page {
+    /* Safe area insets - fallback to 0 for browsers that don't support */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
+/* Edge-to-Edge Page Base Styles */
+page {
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+}
+
 /* 1. Mặc định là LIGHT MODE */
 :root,
 page {
