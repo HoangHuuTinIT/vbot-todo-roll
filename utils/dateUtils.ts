@@ -1,21 +1,23 @@
 // utils/dateUtils.ts
-export const formatRelativeTime = (timestamp : number | null, t ?: any) : string => {
+export const formatRelativeTime = (timestamp: number | null, t?: any): string => {
 	if (!timestamp) return '';
 	const now = Date.now();
 	const diff = now - timestamp;
-	const translate = (key : string, value ?: number) => {
-		let text = '';
+	const translate = (key: string, value?: number) => {
 		if (t) {
-			text = t(key);
-		} else {
-			if (key === 'common.time_just_now') return 'Vừa xong';
-			if (key === 'common.time_minutes_ago') text = '{n} phút trước';
-			if (key === 'common.time_hours_ago') text = '{n} giờ trước';
+			if (value !== undefined) {
+				return String(t(key, { n: value }));
+			}
+			return String(t(key));
 		}
+		// Fallback khi không có t
+		let text = '';
+		if (key === 'common.time_just_now') return 'Vừa xong';
+		if (key === 'common.time_minutes_ago') text = '{n} phút trước';
+		if (key === 'common.time_hours_ago') text = '{n} giờ trước';
 		if (value !== undefined) {
 			return text.replace('{n}', String(value));
 		}
-
 		return text;
 	};
 
@@ -39,7 +41,7 @@ export const formatRelativeTime = (timestamp : number | null, t ?: any) : string
 	return `${d}/${m}/${y} ${h}:${min}`;
 };
 
-export const formatDateDisplay = (dateStr : string) : string => {
+export const formatDateDisplay = (dateStr: string): string => {
 	if (!dateStr) return '';
 	try {
 		if (dateStr.includes('-')) {
@@ -56,7 +58,7 @@ export const formatDateDisplay = (dateStr : string) : string => {
 };
 
 
-const parseSafeDate = (dateStr : string) : Date | null => {
+const parseSafeDate = (dateStr: string): Date | null => {
 	if (!dateStr) return null;
 
 	const safeStr = dateStr.replace(/-/g, '/');
@@ -64,14 +66,14 @@ const parseSafeDate = (dateStr : string) : Date | null => {
 	return isNaN(d.getTime()) ? null : d;
 }
 
-export const getStartOfDay = (dateStr : string) : number => {
+export const getStartOfDay = (dateStr: string): number => {
 	const d = parseSafeDate(dateStr);
 	if (!d) return -1;
 	d.setHours(0, 0, 0, 0);
 	return d.getTime();
 };
 
-export const getStartOfNextDay = (dateStr : string) : number => {
+export const getStartOfNextDay = (dateStr: string): number => {
 	const d = parseSafeDate(dateStr);
 	if (!d) return -1;
 
@@ -83,7 +85,7 @@ export const getStartOfNextDay = (dateStr : string) : number => {
 	return d.getTime();
 };
 
-export const convertDateRangeToValue = (startDate : string, endDate : string) : string => {
+export const convertDateRangeToValue = (startDate: string, endDate: string): string => {
 	if (!startDate && !endDate) return "";
 	const startTs = getStartOfDay(startDate);
 	const endTs = getStartOfNextDay(endDate);
@@ -93,7 +95,7 @@ export const convertDateRangeToValue = (startDate : string, endDate : string) : 
 	return `${s}|${e}`;
 };
 
-export const getMinuteTimestamp = (dateStr : string) : number => {
+export const getMinuteTimestamp = (dateStr: string): number => {
 	if (!dateStr) return 0;
 	const d = new Date(dateStr.replace(/-/g, '/'));
 	if (isNaN(d.getTime())) return 0;
@@ -103,7 +105,7 @@ export const getMinuteTimestamp = (dateStr : string) : number => {
 	return d.getTime();
 };
 
-export const validateNotifyAndDueDate = (dueDateStr : string, notifyDateStr : string) : boolean => {
+export const validateNotifyAndDueDate = (dueDateStr: string, notifyDateStr: string): boolean => {
 	const dueTime = getMinuteTimestamp(dueDateStr);
 	const notifyTime = getMinuteTimestamp(notifyDateStr);
 	if (!dueTime || !notifyTime) return true;
@@ -113,7 +115,7 @@ export const validateNotifyAndDueDate = (dueDateStr : string, notifyDateStr : st
 	return true;
 };
 
-export const timestampToDateTimeStr = (ts : number) : string => {
+export const timestampToDateTimeStr = (ts: number): string => {
 	if (!ts || ts <= 0) return '';
 	try {
 		const date = new Date(ts);

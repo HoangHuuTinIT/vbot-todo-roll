@@ -11,7 +11,7 @@
 			</view>
 
 			<view class="content-box">
-				<rich-text :nodes="formattedMessage"></rich-text>
+				<text class="message-text">{{ notificationStore.message }}</text>
 			</view>
 
 			<view class="close-btn" @click.stop="close">✕</view>
@@ -22,9 +22,10 @@
 <script setup lang="ts">
 	import { computed, ref } from 'vue';
 	import { useNotificationStore } from '@/stores/notification';
-
+	import { useAuthStore } from '@/stores/auth';
 
 	const notificationStore = useNotificationStore();
+	const authStore = useAuthStore();
 
 
 
@@ -38,10 +39,6 @@
 		}
 	});
 
-
-	const formattedMessage = computed(() => {
-		return `<div style="font-size: 14px; line-height: 1.4; color: var(--text-primary);">${notificationStore.message}</div>`;
-	});
 
 	const close = () => {
 		notificationStore.hide();
@@ -129,22 +126,16 @@
 		word-break: break-word;
 	}
 
+	.message-text {
+		font-size: 14px;
+		line-height: 1.4;
+		color: var(--text-primary);
+	}
+
 	.close-btn {
 		font-size: 14px;
 
 		color: var(--text-hint);
 		padding: 4px;
-	}
-
-
-	:deep(.highlight) {
-		color: #007aff;
-		font-weight: bold;
-	}
-
-	:deep(b) {
-		font-weight: 600;
-
-		color: var(--text-primary);
 	}
 </style>

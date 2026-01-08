@@ -1,7 +1,6 @@
-// locale/vi.json
 {
 	"common": {
-		"loading_more":":Tải thêm...",
+		"loading_more": ":Tải thêm...",
 		"loading": "Đang tải dữ liệu...",
 		"no_data": "Chưa có dữ liệu",
 		"all": "Tất cả",
@@ -45,10 +44,10 @@
 		"network_restored": "Đã khôi phục kết nối",
 		"no_internet": "Không có kết nối Internet",
 		"no_name": "(Không tên)",
-		"page":"Trang"
+		"page": "Trang"
 	},
 	"todo": {
-		"todo_detail_title":"Chi tiết công việc",
+		"todo_detail_title": "Chi tiết công việc",
 		"attached_links": "Liên kết đính kèm",
 		"page_title": "Công việc",
 		"create_page_title": "Tạo công việc",
@@ -236,11 +235,11 @@
 		"dec": "Tháng 12"
 	},
 	"socket": {
-		"received_at": "Công việc <span class='highlight'>{code}</span> | <b>{title}</b> ở nhóm <b>{group}</b> sẽ hết hạn vào {date}. Vui lòng kiểm tra!",
-		"reassigned": "Công việc <span class='highlight'>{code}</span> | <b>{title}</b> ở nhóm <b>{group}</b> đã đổi người phụ trách: <b>{oldData}</b> ➝ <span class='highlight'>{newData}</span>",
-		"status_changed": "Công việc <span class='highlight'>{code}</span> | <b>{title}</b> ở nhóm <b>{group}</b> đã cập nhật trạng thái: <b>{oldData}</b> ➝ <span class='highlight'>{newData}</span>",
-		"task_assigned": "Bạn có công việc mới: <span class='highlight'>{code}</span> | <b>{title}</b> ở nhóm <b>{group}</b>",
-		"due_date_passed": "Công việc <span class='highlight'>{code}</span> | <b>{title}</b> ở nhóm <b>{group}</b> đã hết hạn vào {date}. Xử lý ngay!"
+		"received_at": "Công việc [{code}] {title} ở nhóm [{group}] sẽ hết hạn vào {date}. Vui lòng kiểm tra!",
+		"reassigned": "Công việc [{code}] {title} ở nhóm [{group}] đã đổi người phụ trách: {oldData} ➝ {newData}",
+		"status_changed": "Công việc [{code}] {title} ở nhóm [{group}] đã cập nhật trạng thái: {oldData} ➝ {newData}",
+		"task_assigned": "Bạn có công việc mới: [{code}] {title} ở nhóm [{group}]",
+		"due_date_passed": "Công việc [{code}] {title} ở nhóm [{group}] đã hết hạn vào {date}. Xử lý ngay!"
 	},
 	"timeline": {
 		"HISTORY_CALL_IN": "Cuộc gọi đến",
@@ -260,5 +259,4 @@
 		"NOTE_UPDATE": "Sửa ghi chú",
 		"NOTE_DELETE": "Xóa ghi chú"
 	}
-
 }

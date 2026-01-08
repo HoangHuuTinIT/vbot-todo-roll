@@ -8,16 +8,16 @@ import { useNotificationStore } from '@/stores/notification';
 import i18n from '@/locale/index';
 
 interface SocketState {
-	socketTask : UniApp.SocketTask | null;
-	isConnected : boolean;
-	reconnectInterval : any;
-	isConnecting : boolean;
-	projectNamesCache : Record<string, string>;
-	isManualClose : boolean;
+	socketTask: UniApp.SocketTask | null;
+	isConnected: boolean;
+	reconnectInterval: any;
+	isConnecting: boolean;
+	projectNamesCache: Record<string, string>;
+	isManualClose: boolean;
 }
 
 export const useSocketStore = defineStore('socket', {
-	state: () : SocketState => ({
+	state: (): SocketState => ({
 		socketTask: null,
 		isConnected: false,
 		isConnecting: false,
@@ -116,7 +116,7 @@ export const useSocketStore = defineStore('socket', {
 			this.isConnecting = false;
 
 		},
-		async handleMessage(msgStr : string) {
+		async handleMessage(msgStr: string) {
 			try {
 				const msg = JSON.parse(msgStr);
 				if (msg.module !== 'TODO') return;
@@ -147,16 +147,10 @@ export const useSocketStore = defineStore('socket', {
 				console.error('Socket: Parse message error', e);
 			}
 		},
-		getNotificationContent(key : string, params : Record<string, any>) {
-			let text = i18n.global.t(key);
-			for (const [paramKey, paramValue] of Object.entries(params)) {
-				const regex = new RegExp(`{${paramKey}}`, 'g');
-				text = text.replace(regex, String(paramValue));
-			}
-
-			return text;
+		getNotificationContent(key: string, params: Record<string, any>) {
+			return String(i18n.global.t(key, params));
 		},
-		async getGroupName(projectCode : string) : Promise<string> {
+		async getGroupName(projectCode: string): Promise<string> {
 			if (!projectCode) return 'Nhóm không xác định';
 
 			if (this.projectNamesCache[projectCode]) {
@@ -178,7 +172,7 @@ export const useSocketStore = defineStore('socket', {
 		},
 
 
-		async handleNotificationReceived(data : any) {
+		async handleNotificationReceived(data: any) {
 			const groupName = await this.getGroupName(data.projectCode);
 			const content = this.getNotificationContent('socket.received_at', {
 				code: data.code || 'N/A',
@@ -190,7 +184,7 @@ export const useSocketStore = defineStore('socket', {
 			this.showNotificationAlert(content, 'warning');
 		},
 
-		async handleReassigned(data : any) {
+		async handleReassigned(data: any) {
 			const groupName = await this.getGroupName(data.projectCode);
 
 			const content = this.getNotificationContent('socket.reassigned', {
@@ -204,7 +198,7 @@ export const useSocketStore = defineStore('socket', {
 			this.showNotificationAlert(content, 'info');
 		},
 
-		async handleStatusChanged(data : any) {
+		async handleStatusChanged(data: any) {
 			const groupName = await this.getGroupName(data.projectCode);
 
 			const content = this.getNotificationContent('socket.status_changed', {
@@ -218,7 +212,7 @@ export const useSocketStore = defineStore('socket', {
 			this.showNotificationAlert(content, 'success');
 		},
 
-		async handleTaskAssigned(data : any) {
+		async handleTaskAssigned(data: any) {
 			const groupName = await this.getGroupName(data.projectCode);
 
 			const content = this.getNotificationContent('socket.task_assigned', {
@@ -230,7 +224,7 @@ export const useSocketStore = defineStore('socket', {
 			this.showNotificationAlert(content, 'info');
 		},
 
-		async handleDueDatePassed(data : any) {
+		async handleDueDatePassed(data: any) {
 			const groupName = await this.getGroupName(data.projectCode);
 
 			const content = this.getNotificationContent('socket.due_date_passed', {
@@ -243,7 +237,7 @@ export const useSocketStore = defineStore('socket', {
 			this.showNotificationAlert(content, 'error');
 		},
 
-		showNotificationAlert(content : string, type : 'info' | 'success' | 'warning' | 'error' = 'info') {
+		showNotificationAlert(content: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') {
 			// #ifdef APP-PLUS
 			uni.vibrateShort({});
 			// #endif
