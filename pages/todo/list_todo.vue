@@ -296,7 +296,7 @@
 	import AppPicker from '@/components/AppPicker.vue';
 	import { useI18n } from 'vue-i18n';
 	import { useAuthStore } from '@/stores/auth';
-
+	import { postEventToNative } from '@/utils/nativeBridge';
 	const instance = getCurrentInstance();
 	const authStore = useAuthStore();
 	const isDark = computed(() => authStore.isDark);
@@ -306,25 +306,13 @@
 	const enableScrollAnimation = ref(true);
 
 	const onBack = () => {
-		const pages = getCurrentPages();
-		if (pages.length > 1) {
-			uni.navigateBack({
-				delta: 1
-			});
-		} else {
-			/* #ifdef APP-PLUS */
-			plus.runtime.quit();
-			/* #endif */
-			/* #ifndef APP-PLUS */
-			// Check if running in Android WebView with our interface
-			if (typeof (window as any).Android !== 'undefined' && (window as any).Android.closeMiniApp) {
-				(window as any).Android.closeMiniApp();
-			} else {
-				history.back();
-			}
-			/* #endif */
-		}
-	};
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+        uni.navigateBack({ delta: 1 });
+    } else {
+        postEventToNative('web_app_close');
+    } 
+};
 	const statusBarHeight = ref(20);
 	onMounted(() => {
 		const sysInfo = uni.getSystemInfoSync();
