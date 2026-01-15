@@ -7,7 +7,7 @@ export function setupNativeEventListener(){
     window.Telegram= window.Telegram || {};
     window.Telegram.WebView= window.Telegram.WebView || {};
     window.Telegram.WebView.receiveEvent= (eventType:string , eventData:any)=>{
-        const event= new CustomEvent('nativeEvent', {
+        const event= new CustomEvent('native-event', {
             detail: {eventType, eventData}
         });
         window.dispatchEvent(event);
